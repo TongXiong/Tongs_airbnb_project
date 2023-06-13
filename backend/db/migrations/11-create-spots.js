@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Spots', {
+    await queryInterface.createTable('Spots', {schema: "api_backend_project"}, {
       id: {
         allowNull: false,
         autoIncrement: true,
