@@ -1,14 +1,20 @@
 const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
-const { Spot } = require("../../db/models")
+const { Spot, Review, User, Booking} = require("../../db/models")
 const router = express.Router()
 
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth")
 
 router.get("/", async (req, res) => {
-    const spots = await Spot.findAll()
-    res.json({spots})
+    const spots = await Spot.findAll({
+        include: {
+            model: Review,
+        }
+    })
+    res.json({
+        spots
+    })
 })
 
 router.post("/", async (req, res) => {
@@ -29,13 +35,20 @@ router.post("/", async (req, res) => {
     })
 })
 
-router.get("/current", restoreUser, requireAuth, async (req, res) => {
+router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
     const spots = await Spot.findAll({
         where: {
             ownerId: req.user.id
         }
     })
-    return res.json(spots)
+    res.json(spots)
+})
+
+router.get("/:spotId", async (req, res) => {
+    const spots = await Spot.findByPk(req.params.spotId)
+    res.json({
+        spots
+    })
 })
 
 
