@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up (queryInterface, Sequelize) {
 
-    options.tableName = 'Spots';
+    options.tableName = 'Spot';
     return queryInterface.bulkInsert(options, [
       {
         ownerId: 1,
@@ -76,7 +76,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
 
-    options.tableName = 'Spots';
+    options.tableName = 'Spot';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {});
   }
