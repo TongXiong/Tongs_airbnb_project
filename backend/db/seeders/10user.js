@@ -12,38 +12,38 @@ module.exports = {
     options.tableName = 'Users';
     return queryInterface.bulkInsert(options, [
       {
-        firstName: 'DemoFirstName1',
-        lastName: 'DemoLastName1',
-        email: 'demo1@user.io',
-        username: 'demo-lition',
+        firstName: 'Mario',
+        lastName: 'Mario',
+        email: 'marioBros@Plumbing.Co',
+        username: 'mario64',
         hashedPassword: bcrypt.hashSync('password')
       },
       {
-        firstName: 'DemoFirstName2',
-        lastName: 'DemoLastName2',
-        email: 'user2@user.io',
-        username: 'demo-lition1',
+        firstName: 'Luigi',
+        lastName: 'Mario',
+        email: 'luigiBros@Plumbing.Co',
+        username: 'Luigi64',
         hashedPassword: bcrypt.hashSync('password2')
       },
       {
-        firstName: 'DemoFirstName3',
-        lastName: 'DemoLastName3',
-        email: 'user3@user.io',
-        username: 'FakeUser3',
+        firstName: 'Bowser',
+        lastName: 'Koopa',
+        email: 'evilking@conquer.co',
+        username: 'Bowser64',
         hashedPassword: bcrypt.hashSync('password3')
       },
       {
-        firstName: 'DemoFirstName4',
-        lastName: 'DemoLastName4',
-        email: 'user4@user.io',
-        username: 'FakeUser4',
+        firstName: 'Peach',
+        lastName: 'Toadstool',
+        email: 'princess4@mushroom.io',
+        username: 'Peach64',
         hashedPassword: bcrypt.hashSync('password4')
       },
       {
-        firstName: 'DemoFirstName5',
-        lastName: 'DemoLastName5',
-        email: 'user5@user.io',
-        username: 'FakeUser5',
+        firstName: 'Toad',
+        lastName: 'mushroom',
+        email: 'toad@mushroom.io',
+        username: 'Toad64',
         hashedPassword: bcrypt.hashSync('password5')
       }
     ], {});
