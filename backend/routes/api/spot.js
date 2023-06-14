@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const { Spot, Review, User, Booking, SpotImage} = require("../../db/models")
 const router = express.Router()
 const { check } = require('express-validator');
-const { handleValidationErrors } = require("../../utils/validation")
+const { handleValidationErrors } = require("../../utils/validation");
 
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth")
 
@@ -58,7 +58,7 @@ const validatePost = [
       .not()
       .isString()
       .withMessage("Please provide an amount in Numbers"),
-    handleValidationErrors
+      handleValidationErrors
   ];
 
   const validateImage = [
@@ -163,7 +163,7 @@ router.get("/:spotId", async (req, res) => {
     })
 })
 
-router.post("/", validatePost, restoreUser, requireAuth, handleValidationErrors, async (req, res) => {
+router.post("/", validatePost, restoreUser, requireAuth, async (req, res, next) => {
     const {address, city, state, country, lat, lng, name, description, price} = req.body
     const newSpot = await Spot.create({
         ownerId: req.user.id,
@@ -177,6 +177,7 @@ router.post("/", validatePost, restoreUser, requireAuth, handleValidationErrors,
         description,
         price
     })
+
     res.status(201)
     res.json({
         newSpot

@@ -56,7 +56,7 @@ const validateSignup = [
   check("lastName")
     .exists({checkFalsy: true})
     .withMessage("Last Name is required"),
-  handleValidationErrors
+    handleValidationErrors
 ];
 
 // Sign up
