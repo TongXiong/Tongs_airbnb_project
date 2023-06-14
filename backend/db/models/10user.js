@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
           otherKey: "spotId"
         }
       )
+      User.hasMany(
+        models.Review, {
+          foreignKey: "userId"
+        }
+      )
     }
   };
 

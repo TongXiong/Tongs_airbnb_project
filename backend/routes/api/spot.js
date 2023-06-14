@@ -1,25 +1,151 @@
 const express = require('express');
 const { Op } = require('sequelize');
+const { sequelize } = require("../../db/models")
 const bcrypt = require('bcryptjs');
-const { Spot, Review, User, Booking} = require("../../db/models")
+const { Spot, Review, User, Booking, SpotImage} = require("../../db/models")
 const router = express.Router()
+const { check } = require('express-validator');
+const { handleValidationErrors } = require("../../utils/validation")
 
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth")
 
+const validatePost = [
+    check('address')
+      .exists({ checkFalsy: true })
+      .notEmpty()
+      .withMessage("Street address is required"),
+    check('city')
+      .exists({ checkFalsy: true })
+      .notEmpty()
+      .withMessage("City is required"),
+    check('state')
+      .exists({ checkFalsy: true })
+      .notEmpty()
+      .withMessage("state is required"),
+    check('country')
+      .exists({ checkFalsy: true })
+      .notEmpty()
+      .withMessage("Country is required"),
+    check('lat')
+      .exists({ checkFalsy: true })
+      .notEmpty()
+      .withMessage("Latitude is not valid"),
+    check('lng')
+      .exists({ checkFalsy: true })
+      .notEmpty()
+      .withMessage("Longitude is not valid"),
+    check('name')
+      .exists({ checkFalsy: true })
+      .isLength({min: 3, max: 50})
+      .notEmpty()
+      .withMessage("Name must be less than 50 characters"),
+    check('description')
+      .exists({ checkFalsy: true })
+      .notEmpty()
+      .withMessage("description is required"),
+    check('price')
+      .exists({ checkFalsy: true })
+      .isInt({
+        allow_leading_zeroes: true
+    })
+      .notEmpty()
+      .withMessage("Price per day is required"),
+    handleValidationErrors
+  ];
+
 router.get("/", async (req, res) => {
     const spots = await Spot.findAll({
-        include: {
-            model: Review,
-        }
+        include: [
+            {
+                model: Review,
+                attributes: [],
+            },
+            {
+                model: SpotImage,
+                attributes: []
+            }
+        ],
+        attributes: {
+            include: [
+                [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
+                [sequelize.fn("", sequelize.col("url")), "previewImage"]
+            ],
+        },
+        group: ["Spot.id"]
     })
     res.json({
         spots
     })
 })
 
-router.post("/", async (req, res) => {
-    const {address, city, state, country, lat, lng, name, description} = req.body
+
+router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
+    const spots = await Spot.findAll({
+        where: {
+            ownerId: req.user.id
+        },
+        include: [
+            {
+                model: Review,
+                attributes: [],
+            },
+            {
+                model: SpotImage,
+                attributes: []
+            }
+        ],
+        attributes: {
+            include: [
+                [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
+                [sequelize.fn("", sequelize.col("url")), "previewImage"]
+            ],
+        },
+        group: ["Spot.id"]
+    })
+    res.json(spots)
+})
+
+router.get("/:spotId", async (req, res) => {
+    const spots = await Spot.findByPk(req.params.spotId, {
+        include: [
+            {
+                model: User, as: "Owner",
+                attributes: ["id", "firstName", "lastName"],
+            },
+            {
+                model: SpotImage,
+                attributes: ["id", "url", "preview"]
+            },
+            {
+                model: Review,
+                attributes: []
+            }
+        ],
+        attributes: {
+            include: [
+                [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
+                [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"]
+            ],
+        },
+        group: ["Spot.id"]
+    })
+    if (spots === null) {
+        const err = new Error("Spot does not exist")
+        err.status = 404
+        res.status(err.status || 500)
+        res.json({
+            message: err.message
+        })
+    }
+    res.json({
+        spots
+    })
+})
+
+router.post("/", restoreUser, requireAuth, handleValidationErrors, async (req, res) => {
+    const {address, city, state, country, lat, lng, name, description, price} = req.body
     const newSpot = await Spot.create({
+        ownerId: req.user.id,
         address,
         city,
         state,
@@ -27,7 +153,8 @@ router.post("/", async (req, res) => {
         lat,
         lng,
         name,
-        description
+        description,
+        price
     })
     res.json({
         message: "Successfully created a new spot",
@@ -35,22 +162,73 @@ router.post("/", async (req, res) => {
     })
 })
 
-router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
-    const spots = await Spot.findAll({
-        where: {
-            ownerId: req.user.id
+router.put("/:spotId", restoreUser, requireAuth, async (req, res) => {
+    const {address, city, state, country, lat, lng, name, description, price} = req.body
+    const editSpot = await Spot.findByPk(req.params.spotId);
+    if (editSpot) {
+        if (req.user) {
+            OwnerId = req.user.id
         }
-    })
-    res.json(spots)
-})
-
-router.get("/:spotId", async (req, res) => {
-    const spots = await Spot.findByPk(req.params.spotId)
+        if (address) {
+            editSpot.address = address
+        }
+        if (city) {
+            editSpot.city = city
+        }
+        if (state) {
+            editSpot.state = state
+        }
+        if (country) {
+            editSpot.country = country
+        }
+        if (lat) {
+            editSpot.lat = lat
+        }
+        if (lng) {
+            editSpot.lng = lng
+        }
+        if (name) {
+            editSpot.name = name
+        }
+        if (description) {
+            editSpot.description = description
+        }
+        if (price) {
+            editSpot.price = price
+        }
+    } else {
+        const err = new Error("Spot couldn't be found")
+        err.status = 404
+        res.status(err.status || 500)
+        res.json({
+            message: err.message
+        })
+    }
+    await editSpot.save()
+    res.status(201)
     res.json({
-        spots
+        editSpot
     })
 })
 
+router.delete("/:spotId", restoreUser, requireAuth, async (req, res, next) => {
+    const spot = await Spot.findByPk(req.params.spotId)
+    if (req.user) {
+        if (spot) {
+            await spot.destroy()
+        } else {
+        const err = new Error("Spot couldn't be found")
+        err.status = 404
+        res.status(err.status || 500)
+        res.json({
+            message: err.message
+        })
+    }
+    }
+    res.json({
+        message: "Successfully deleted"
+    })
+})
 
 router.use((err, req, res, next) => {
     if (err) {
