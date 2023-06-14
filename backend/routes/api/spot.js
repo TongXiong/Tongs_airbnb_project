@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const { sequelize } = require("../../db/models")
 const bcrypt = require('bcryptjs');
-const { Spot, Review, User, Booking, SpotImage} = require("../../db/models")
+const { Spot, Review, User, Booking, SpotImage, ReviewImage} = require("../../db/models")
 const router = express.Router()
 const { check } = require('express-validator');
 const { handleValidationErrors } = require("../../utils/validation");
@@ -161,6 +161,66 @@ router.get("/:spotId", async (req, res) => {
     res.json({
         spots
     })
+})
+
+router.get("/:spotId/reviews", async (req, res) => {
+    const reviews = await Review.findAll({
+        where: {
+            spotId: req.params.spotId,
+        },
+        include: [
+            {
+                model: User,
+                attributes: ["firstName", "lastName"]
+            },
+            {
+                model: Spot,
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "description"]
+                },
+            },
+            {
+                model: ReviewImage,
+                attributes: ["id", "url"]
+            }
+        ],
+        attributes: ["id", "userId", "spotId", "review", "stars", "createdAt", "updatedAt"],
+        group: ["Review.id"]
+    })
+    if (!reviews) {
+        const err = new Error("Spot couldn't be found")
+        err.status = 404
+        res.status(err.status || 500)
+        res.json({
+            message: err.message
+        })
+    } else {
+        res.json({
+            reviews
+        })
+    }
+})
+
+router.post("/:spotId/reviews", restoreUser, requireAuth, async (req, res) => {
+    const { review, stars } = req.body
+    const currentSpot = await Spot.findOne({
+        where: {
+            id: req.params.spotId,
+        },
+    })
+    if (currentSpot) {
+        const newReview = await currentSpot.createReview({
+            userId: req.user.id,
+            review,
+            stars,
+        })
+        res.json(newReview)
+    } else {
+        res.status(404)
+        res.json({
+            message: "Spot couldn't be found"
+        })
+    }
 })
 
 router.post("/", validatePost, restoreUser, requireAuth, async (req, res, next) => {
