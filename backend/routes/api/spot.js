@@ -202,13 +202,11 @@ router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOO
         group: ["Review.id"]
     })
     if (!reviews.length) {
-        console.log(reviews.id)
         res.status(404)
         res.json({
             message: "Spot couldn't be found"
         })
     } else {
-        console.log(reviews)
         res.json({
             reviews
         })
