@@ -148,7 +148,7 @@ router.get("/:spotId", async (req, res) => {
                 [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"]
             ],
         },
-        group: ["Spot.id", "SpotImages.url", "Owner.id"]
+        group: ["Spot.id", "SpotImages.id", "Owner.id"]
     })
     if (spots === null) {
         const err = new Error("Spot couldn't be found")
