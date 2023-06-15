@@ -163,7 +163,7 @@ router.get("/:spotId", async (req, res) => {
     })
 })
 
-router.get("/:spotId/reviews", async (req, res) => {
+router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOORK
     const reviews = await Review.findAll({
         where: {
             spotId: req.params.spotId,
@@ -201,7 +201,7 @@ router.get("/:spotId/reviews", async (req, res) => {
     }
 })
 
-router.post("/:spotId/reviews", restoreUser, requireAuth, async (req, res) => {
+router.post("/:spotId/reviews", restoreUser, requireAuth, async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOORK
     const { review, stars } = req.body
     const currentSpot = await Spot.findOne({
         where: {
@@ -223,7 +223,7 @@ router.post("/:spotId/reviews", restoreUser, requireAuth, async (req, res) => {
     }
 })
 
-router.post("/", validatePost, restoreUser, requireAuth, async (req, res, next) => {
+router.post("/", validatePost, restoreUser, requireAuth, async (req, res) => {
     const {address, city, state, country, lat, lng, name, description, price} = req.body
     const newSpot = await Spot.create({
         ownerId: req.user.id,
@@ -277,7 +277,6 @@ router.put("/:spotId", validatePost, restoreUser, requireAuth, async (req, res) 
             ownerId: req.user.id
         }
     })
-    if (editSpot) {
         if (address) {
             editSpot.address = address
         }
@@ -310,14 +309,6 @@ router.put("/:spotId", validatePost, restoreUser, requireAuth, async (req, res) 
         res.json({
             editSpot
         })
-    } else if (!editSpot) {
-        const err = new Error("Spot couldn't be found")
-        err.status = 404
-        res.status(err.status || 500)
-        res.json({
-            message: err.message
-        })
-    }
 })
 
 router.delete("/:spotId", restoreUser, requireAuth, async (req, res, next) => {
