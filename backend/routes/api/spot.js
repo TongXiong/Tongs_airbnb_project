@@ -83,7 +83,7 @@ router.get("/", async (req, res) => {
             },
             {
                 model: SpotImage,
-                attributes: []
+                attributes: [],
             }
         ],
         attributes: {
@@ -92,7 +92,7 @@ router.get("/", async (req, res) => {
                 [sequelize.fn("", sequelize.col("url")), "previewImage"]
             ],
         },
-        group: ["Spot.id", "SpotImage.id"]
+        group: ["Spot.id"]
     })
     res.json({
         spots
@@ -121,7 +121,7 @@ router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
                 [sequelize.fn("", sequelize.col("url")), "previewImage"]
             ],
         },
-        group: ["Spot.id"]
+        group: ["Spot.id", "SpotImages.url"]
     })
     res.json(spots)
 })
@@ -148,7 +148,7 @@ router.get("/:spotId", async (req, res) => {
                 [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"]
             ],
         },
-        group: ["Spot.id"]
+        group: ["Spot.id", "SpotImages.url"]
     })
     if (spots === null) {
         const err = new Error("Spot couldn't be found")
