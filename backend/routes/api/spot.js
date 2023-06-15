@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const { sequelize } = require("../../db/models")
 const bcrypt = require('bcryptjs');
-const { Spot, Review, User, Booking, SpotImage, ReviewImage} = require("../../db/models")
+const { Spot, Review, User, Booking, SpotImage, ReviewImage } = require("../../db/models")
 const router = express.Router()
 const { check } = require('express-validator');
 const { handleValidationErrors } = require("../../utils/validation");
@@ -11,84 +11,84 @@ const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth")
 
 const validatePost = [
     check('address')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage("Street address is required"),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage("Street address is required"),
     check('city')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage("City is required"),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage("City is required"),
     check('state')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage("state is required"),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage("state is required"),
     check('country')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage("Country is required"),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage("Country is required"),
     check('lat')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .isDecimal({
-        allow_leading_zeroes: true
-    })
-      .withMessage("Latitude is not valid"),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .isDecimal({
+            allow_leading_zeroes: true
+        })
+        .withMessage("Latitude is not valid"),
     check('lng')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .isDecimal({
-        allow_leading_zeroes: true
-    })
-      .withMessage("Longitude is not valid"),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .isDecimal({
+            allow_leading_zeroes: true
+        })
+        .withMessage("Longitude is not valid"),
     check('name')
-      .exists({ checkFalsy: true })
-      .isLength({min: 3, max: 50})
-      .notEmpty()
-      .withMessage("Name must be less than 50 characters"),
+        .exists({ checkFalsy: true })
+        .isLength({ min: 3, max: 50 })
+        .notEmpty()
+        .withMessage("Name must be less than 50 characters"),
     check('description')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage("description is required"),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage("description is required"),
     check('price')
-      .exists({ checkFalsy: true })
-      .isInt()
-      .notEmpty()
-      .withMessage("Price per day is required"),
-      check("price")
-      .not()
-      .isString()
-      .withMessage("Please provide an amount in Numbers"),
-      handleValidationErrors
-  ];
+        .exists({ checkFalsy: true })
+        .isInt()
+        .notEmpty()
+        .withMessage("Price per day is required"),
+    check("price")
+        .not()
+        .isString()
+        .withMessage("Please provide an amount in Numbers"),
+    handleValidationErrors
+];
 
-  const validateImage = [
+const validateImage = [
     check('url')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage("url is required"),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage("url is required"),
     check('preview')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .isBoolean()
-      .withMessage("is it previewed?"),
-      handleValidationErrors
-  ]
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .isBoolean()
+        .withMessage("is it previewed?"),
+    handleValidationErrors
+]
 
-  const validReview = [
+const validReview = [
     check('review')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .withMessage("Review text is required"),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage("Review text is required"),
     check('stars')
-      .exists({ checkFalsy: true })
-      .notEmpty()
-      .isInt({
-        min: 1,
-        max: 5
-      })
-      .withMessage("Stars must be an integer from 1 to 5"),
-      handleValidationErrors
-  ]
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .isInt({
+            min: 1,
+            max: 5
+        })
+        .withMessage("Stars must be an integer from 1 to 5"),
+    handleValidationErrors
+]
 
 router.get("/", async (req, res) => {
     const spots = await Spot.findAll({
@@ -201,14 +201,14 @@ router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOO
         attributes: ["id", "userId", "spotId", "review", "stars", "createdAt", "updatedAt"],
         group: ["Review.id"]
     })
-    if (!reviews) {
-        const err = new Error("Spot couldn't be found")
-        err.status = 404
-        res.status(err.status || 500)
+    if (!reviews.length) {
+        console.log(reviews.id)
+        res.status(404)
         res.json({
-            message: err.message
+            message: "Spot couldn't be found"
         })
     } else {
+        console.log(reviews)
         res.json({
             reviews
         })
@@ -220,36 +220,41 @@ router.post("/:spotId/reviews", validReview, restoreUser, requireAuth, async (re
     const currentSpot = await Spot.findOne({
         where: {
             id: req.params.spotId,
+
         },
+        include: {
+            model: Review,
+            attributes: ["userId"]
+        }
     })
-    if (currentSpot) {
-        const newReview = await currentSpot.createReview({
+    if (!currentSpot) {
+        res.status(404)
+        return res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+    let arrOfUser = []
+    for (let user of currentSpot.Reviews) {
+        arrOfUser.push(user.userId)
+    }
+    if (arrOfUser.includes(req.user.id)) {
+        res.status(500)
+        res.json({
+            message: "User already has a review for this spot"
+        })
+    } else if (!arrOfUser.includes(req.user.id)) {
+            const newReview = await currentSpot.createReview({
             userId: req.user.id,
             review,
             stars,
         })
-        if (req.user.id = newReview.userId) {
-            res.status(500)
-            console.log(newReview.userId)
-            console.log(req.user.id)
-            res.json({
-                message: "User already has a review for this spot"
-            })
-        } else {
-            console.log(newReview.userId)
-            console.log(req.user.id)
-            res.json(newReview)
-        }
-    } else {
-        res.status(404)
-        res.json({
-            message: "Spot couldn't be found"
-        })
+        return res.json(newReview)
     }
 })
 
+
 router.post("/", validatePost, restoreUser, requireAuth, async (req, res) => {
-    const {address, city, state, country, lat, lng, name, description, price} = req.body
+    const { address, city, state, country, lat, lng, name, description, price } = req.body
     const newSpot = await Spot.create({
         ownerId: req.user.id,
         address,
@@ -299,7 +304,7 @@ router.post("/:spotId/images", validateImage, restoreUser, requireAuth, async (r
 // NEED TO RECHECK AFTER MAKING GET SPOTIMAGE
 
 router.put("/:spotId", validatePost, restoreUser, requireAuth, async (req, res) => {
-    const {address, city, state, country, lat, lng, name, description, price} = req.body
+    const { address, city, state, country, lat, lng, name, description, price } = req.body
     const editSpot = await Spot.findOne({
         where: {
             id: req.params.spotId,
