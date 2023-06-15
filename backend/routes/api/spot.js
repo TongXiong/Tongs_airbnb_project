@@ -281,11 +281,11 @@ router.delete("/:spotId", restoreUser, requireAuth, async (req, res, next) => {
     }
 })
 
-router.use((err, req, res, next) => {
-    if (err) {
-        res.status(err.status)
-        res.json (err.errors)
-    }
-})
+// router.use((err, req, res, next) => {
+//     if (err) {
+//         res.status(err.status)
+//         res.json (err.errors)
+//     }
+// })
 
 module.exports = router;
