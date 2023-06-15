@@ -16,12 +16,15 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
         include: [
             {
                 model: User,
-                attributes: ["firstName", "lastName"]
+                attributes: ["id", "firstName", "lastName"]
             },
             {
                 model: Spot,
                 attributes: {
-                    exclude: ["createdAt", "updatedAt", "description"]
+                    exclude: ["createdAt", "updatedAt", "description"],
+                    include: [
+                        [sequelize.fn("", sequelize.col("url")), "previewImage"]
+                    ]
                 },
             },
             {
@@ -30,7 +33,7 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
             }
         ],
         attributes: ["id", "userId", "spotId", "review", "stars", "createdAt", "updatedAt"],
-        group: ["Review.id"]
+        group: ["Review.id", "User.id", "Spot.id"]
     })
     res.json({
         reviews
