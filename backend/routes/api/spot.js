@@ -130,12 +130,12 @@ router.get("/:spotId", async (req, res) => {
     const spots = await Spot.findByPk(req.params.spotId, {
         include: [
             {
-                model: User, as: "Owner",
-                attributes: ["id", "firstName", "lastName"],
-            },
-            {
                 model: SpotImage,
                 attributes: ["id", "url", "preview"]
+            },
+            {
+                model: User, as: "Owner",
+                attributes: ["id", "firstName", "lastName"],
             },
             {
                 model: Review,
@@ -144,8 +144,8 @@ router.get("/:spotId", async (req, res) => {
         ],
         attributes: {
             include: [
-                [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
                 [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"]
+                [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
             ],
         },
         group: ["Spot.id", "SpotImages.id", "Owner.id"]
