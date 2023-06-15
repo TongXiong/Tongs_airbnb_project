@@ -158,9 +158,7 @@ router.get("/:spotId", async (req, res) => {
             message: err.message
         })
     }
-    res.json({
-        spots
-    })
+    res.json(spots)
 })
 
 router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOO
@@ -251,16 +249,18 @@ router.post("/:spotId/images", validateImage, restoreUser, requireAuth, async (r
             id: req.params.spotId,
             ownerId: req.user.id
         },
-        attributes: {
-            exclude: ["id"]
-        },
     })
     if (currentSpot) {
         const newImage = await currentSpot.createSpotImage({
             url,
             preview,
+            attributes: ["createdAt", "preview"]
         })
-        res.json(newImage)
+        res.json({
+            id: newImage.id,
+            url: newImage.url,
+            preview: newImage.preview
+        })
     } else {
         res.status(404)
         res.json({
