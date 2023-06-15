@@ -163,7 +163,7 @@ router.get("/:spotId", async (req, res) => {
     })
 })
 
-router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOORK
+router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOO
     const reviews = await Review.findAll({
         where: {
             spotId: req.params.spotId,
@@ -201,7 +201,7 @@ router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOO
     }
 })
 
-router.post("/:spotId/reviews", restoreUser, requireAuth, async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOORK
+router.post("/:spotId/reviews", restoreUser, requireAuth, async (req, res) => {
     const { review, stars } = req.body
     const currentSpot = await Spot.findOne({
         where: {
@@ -253,7 +253,7 @@ router.post("/:spotId/images", validateImage, restoreUser, requireAuth, async (r
         },
         attributes: {
             exclude: ["id"]
-        }
+        },
     })
     if (currentSpot) {
         const newImage = await currentSpot.createSpotImage({
@@ -269,6 +269,8 @@ router.post("/:spotId/images", validateImage, restoreUser, requireAuth, async (r
     }
 })
 
+// NEED TO RECHECK AFTER MAKING GET SPOTIMAGE
+
 router.put("/:spotId", validatePost, restoreUser, requireAuth, async (req, res) => {
     const {address, city, state, country, lat, lng, name, description, price} = req.body
     const editSpot = await Spot.findOne({
@@ -277,6 +279,7 @@ router.put("/:spotId", validatePost, restoreUser, requireAuth, async (req, res) 
             ownerId: req.user.id
         }
     })
+    if (editSpot) {
         if (address) {
             editSpot.address = address
         }
@@ -309,6 +312,14 @@ router.put("/:spotId", validatePost, restoreUser, requireAuth, async (req, res) 
         res.json({
             editSpot
         })
+    } else if (!editSpot) {
+        const err = new Error("Spot couldn't be found")
+        err.status = 404
+        res.status(err.status || 500)
+        res.json({
+            message: err.message
+        })
+    }
 })
 
 router.delete("/:spotId", restoreUser, requireAuth, async (req, res, next) => {
@@ -330,13 +341,6 @@ router.delete("/:spotId", restoreUser, requireAuth, async (req, res, next) => {
         res.json({
             message: err.message
         })
-    }
-})
-
-router.use((err, req, res, next) => {
-    if (err) {
-        res.status(err.status)
-        res.json (err.errors)
     }
 })
 
