@@ -13,13 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       Booking.belongsTo(
         models.Spot, {
           foreignKey: "spotId",
-          onDelete: "CASCADE"
+          // onDelete: "CASCADE"
         }
       )
       Booking.belongsTo(
         models.User, {
           foreignKey: "userId",
-          onDelete: "CASCADE"
+          // onDelete: "CASCADE"
         }
       )
     }

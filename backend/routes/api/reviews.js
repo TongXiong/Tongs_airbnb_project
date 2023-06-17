@@ -65,18 +65,16 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
 })
 
 router.post("/:reviewId/images", validateImage, restoreUser, requireAuth, async (req, res) => {
-    const { url} = req.body
+    const { url } = req.body
     const currentReview = await Review.findOne({
         where: {
             id: req.params.reviewId,
-            userId: req.user.id
         },
         include: {
             model: ReviewImage,
             attributes: ["id", "url"]
         }
     })
-
     if (!currentReview) {
         res.status(404)
         res.json({
@@ -89,19 +87,28 @@ router.post("/:reviewId/images", validateImage, restoreUser, requireAuth, async 
         arrOfImages.push(image.url)
     }
     console.log(arrOfImages)
-    if (currentReview && arrOfImages.length < 11) {
-        const newImage = await currentReview.createReviewImage({
-            url,
-            attributes: ["createdAt", "preview"]
-        })
-        res.json({
-            id: newImage.id,
-            url: newImage.url,
-        })
+    const owner = currentReview.userId
+    if (owner === req.user.id) {
+        if (currentReview && arrOfImages.length < 11) {
+            const newImage = await currentReview.createReviewImage({
+                url,
+                attributes: ["createdAt", "preview"]
+            })
+            res.status(201)
+            return res.json({
+                id: newImage.id,
+                url: newImage.url,
+            })
+        } else {
+            res.status(403)
+           return res.json({
+                message: "Maximum number of images for this resource was reached"
+            })
+        }
     } else {
         res.status(403)
-        res.json({
-            message: "Maximum number of images for this resource was reached"
+        return res.json({
+            message: "forbidden"
         })
     }
 })
@@ -111,25 +118,34 @@ router.put("/:reviewId", validReview, restoreUser, requireAuth, async (req, res)
     const reviewSpot = await Review.findOne({
         where: {
             id: req.params.reviewId,
-            userId: req.user.id
         }
     })
-    if (reviewSpot) {
-        if (review) {
-            reviewSpot.review = review
-        }
-        if (stars) {
-            reviewSpot.stars = stars
-        }
-        await reviewSpot.save()
-        res.status(200)
-        res.json(reviewSpot)
-    } else if (!reviewSpot) {
+    if (!reviewSpot) {
         const err = new Error("Review couldn't be found")
         err.status = 404
         res.status(err.status || 500)
-        res.json({
+        return res.json({
             message: err.message
+        })
+    }
+
+    const owner = reviewSpot.userId
+    if (owner === req.user.id) {
+        if (reviewSpot) {
+            if (review) {
+                reviewSpot.review = review
+            }
+            if (stars) {
+                reviewSpot.stars = stars
+            }
+            await reviewSpot.save()
+            res.status(200)
+            return res.json(reviewSpot)
+        }
+    } else {
+        res.status(403)
+        return res.json({
+            message: "forbidden"
         })
     }
 })
@@ -138,20 +154,28 @@ router.delete("/:reviewId", restoreUser, requireAuth, async (req, res, next) => 
     const review = await Review.findOne({
         where: {
             id: req.params.reviewId,
-            userId: req.user.id,
         }
     })
-    if (review) {
-        await review.destroy()
-        res.json({
-            message: "Succesfully deleted"
-        })
-    } else {
+    if (!review) {
         const err = new Error("Review couldn't be found")
         err.status = 404
         res.status(err.status || 500)
-        res.json({
+        return res.json({
             message: err.message
+        })
+    }
+    const owner = review.userId
+    if (owner === req.user.id) {
+        if (review) {
+            await review.destroy()
+            res.json({
+                message: "Succesfully deleted"
+            })
+        }
+    } else {
+        res.status(403)
+        return res.json({
+            message: "forbidden"
         })
     }
 })

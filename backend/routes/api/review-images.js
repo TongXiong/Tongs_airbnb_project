@@ -15,28 +15,25 @@ router.delete("/:reviewImageId", restoreUser, requireAuth, async (req, res) => {
         },
         include: {
             model: Review,
-            attributes: ["spotId"],
-            include: {
-                model: Spot,
-                attributes: ["ownerId"]
-            }
+            attributes: ["userId"],
         }
     })
     if (!reviewImage1) {
         res.status(404)
-         res.json({
+         return res.json({
             message: "Review Image couldn't be found"
         })
     }
-    const owner = reviewImage1.Review.Spot.ownerId
+    const owner = reviewImage1.Review.userId
 
     if (owner === req.user.id) {
         await reviewImage1.destroy()
-         res.json({
+         return res.json({
             message: "Successfully deleted"
         })
     } else {
-         res.json({
+        res.status(403)
+         return res.json({
             message: "Forbidden"
         })
     }

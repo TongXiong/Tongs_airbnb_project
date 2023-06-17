@@ -91,10 +91,39 @@ router.put("/:bookingId", validBooking, restoreUser, requireAuth, async (req, re
     const { startDate, endDate } = req.body
     const bookingSpot = await Booking.findOne({
         where: {
-            id: req.params.bookingId,
-            userId: req.user.id
+            id: req.params.bookingId
         }
     })
+
+    if (!bookingSpot) {
+        const err = new Error("Booking couldn't be found")
+        err.status = 404
+        res.status(err.status || 500)
+        return res.json({
+            message: err.message
+        })
+    }
+
+    let owner = bookingSpot.userId
+    if (owner === req.user.id) {
+        if (bookingSpot) {
+            if (startDate) {
+                bookingSpot.startDate = startDate
+            }
+            if (endDate) {
+                bookingSpot.endDate = endDate
+            }
+            await bookingSpot.save()
+            res.status(200)
+            return res.json(bookingSpot)
+        }
+    } else {
+        res.status(403)
+        return res.json({
+            message: "Forbidden"
+        })
+    }
+
     let end = new Date(endDate).getTime()
     let current = new Date().toJSON().slice(0, 10)
     let realCurrent = new Date(current).getTime()
@@ -102,24 +131,6 @@ router.put("/:bookingId", validBooking, restoreUser, requireAuth, async (req, re
         res.status(403)
         return res.json({
             message: "Past bookings can't be modified"
-        })
-    }
-    if (bookingSpot) {
-        if (startDate) {
-            bookingSpot.startDate = startDate
-        }
-        if (endDate) {
-            bookingSpot.endDate = endDate
-        }
-        await bookingSpot.save()
-        res.status(200)
-        return res.json(bookingSpot)
-    } else if (!bookingSpot) {
-        const err = new Error("Booking couldn't be found")
-        err.status = 404
-        res.status(err.status || 500)
-        return res.json({
-            message: err.message
         })
     }
 })
@@ -143,6 +154,7 @@ router.delete("/:bookingId", restoreUser, requireAuth, async (req, res, next) =>
             message: err.message
         })
     }
+    let start = new Date(book.startDate).getTime()
     let end = new Date(book.endDate).getTime()
     let current = new Date().toJSON().slice(0, 10)
     let realCurrent = new Date(current).getTime()
@@ -153,7 +165,7 @@ router.delete("/:bookingId", restoreUser, requireAuth, async (req, res, next) =>
             return res.json({
                 message: "Bookings that have been started can't be deleted"
             })
-        } else if (realCurrent > end) {
+        } else if (realCurrent > start) {
             res.status(400)
             return res.json({
                 message: "Past bookings can't be deleted"
