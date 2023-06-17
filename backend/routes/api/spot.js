@@ -136,18 +136,64 @@ const validBooking = [
 ]
 
 const validPagination = [
-    check("page")
-        .isInt({
-            min: 1,
-            max: 10
-        })
-        .withMessage("min pages is 1 and max pages is 10"),
-    check("size")
-        .isInt({
-            min: 1,
-            max: 20
-        })
-        .withMessage("min size is 1 and max size is 20"),
+    body("page").custom((value, {req}) => {
+        let number = parseInt(req.query.page)
+        let arrKey = Object.keys(req.query)
+        if (arrKey[0]) {
+            if (number < 1 || number > 10) {
+                throw new Error("min pages is 1 and max pages is 10")
+            } else {
+                return number
+            }
+        }
+        return "hi"
+    }),
+        // body("size").custom((value, {req}) => {
+        //     let size = parseInt(req.query.size)
+        //     if (size < 1 || size > 20) {
+        //         throw new Error("min size is 1 and max size is 20")
+        //     } else {
+        //         return size
+        //     }
+        // })
+        // .optional()
+        // .isInt(),
+        // check(["minLat", "maxLat", "minLng", "maxLng"])
+    // .isDecimal()
+    // .optional(),
+    // body("size").custom((value, {req}) => {
+    //     let size = parseInt(req.query.size)
+    //     if (size < 1 || size > 20) {
+    //         throw new Error("min size is 1 and max size is 20")
+    //     } else {
+    //         return size
+    //     }
+    // }),
+    // check("maxLat")
+    // .isDecimal()
+    // .optional()
+    // .withMessage("Maximum latitude is invalid"),
+    // check("minLng")
+    // .isDecimal()
+    // .optional()
+    // .withMessage("Minimum longitude is invalid"),
+    // check("maxLng")
+    // .isDecimal()
+    // .optional()
+    // .withMessage("Maximum longitude is invalid"),
+    // check(["minPrice", "maxPrice"])
+    // .optional()
+    // .isDecimal({
+    //     min: 0
+    // })
+    // .notEmpty()
+    // .withMessage("Minimum price must be greater than or equal to 0"),
+    // check("maxPrice")
+    // .isDecimal({
+    //     min: 0
+    // })
+    // .notEmpty()
+    // .withMessage("Minimum price must be greater than or equal to 0"),
     handleValidationErrors
 ]
 
