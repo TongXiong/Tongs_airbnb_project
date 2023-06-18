@@ -8,6 +8,7 @@ const { check, body } = require('express-validator');
 const { handleValidationErrors } = require("../../utils/validation");
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth")
 
+// Delete a Review Image
 router.delete("/:reviewImageId", restoreUser, requireAuth, async (req, res) => {
     const reviewImage1 = await ReviewImage.findOne({
         where: {

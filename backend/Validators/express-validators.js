@@ -239,4 +239,6 @@ const validPagination = [
     handleValidationErrors
 ]
 
+
+
 module.exports = { validPagination, validatePost, validateImage, validReview, validBooking }

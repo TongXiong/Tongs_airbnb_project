@@ -7,51 +7,9 @@ const router = express.Router()
 const { check, body } = require('express-validator');
 const { handleValidationErrors } = require("../../utils/validation");
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth")
+const { validPagination, validatePost, validateImage, validReview, validBooking } = require("../../Validators/express-validators.js")
 
-const validBooking = [
-    check('startDate')
-        .exists({ checkFalsy: true })
-        .notEmpty()
-        .isDate()
-        .withMessage("Needs to be in a form of date 'yyyy-mm-dd'"),
-    body('startDate').custom(async value => {
-        const dates = await Booking.findAll({
-            attributes: ["startDate"]
-        })
-        for (let date of dates) {
-            if (value === date.startDate.slice(0, 10)) {
-                throw new Error("Start date conflicts with an existing booking")
-            }
-        }
-    }),
-    check("endDate"),
-    body('endDate').custom(async value => {
-        const dates = await Booking.findAll({
-            attributes: ["endDate"]
-        })
-        for (let date of dates) {
-            if (value === date.endDate.slice(0, 10)) {
-                throw new Error("End date conflicts with an existing booking")
-            }
-        }
-    }),
-    check("endDate"),
-    body("endDate").custom((value, { req }) => {
-        let realStartDate = new Date(req.body.startDate).getTime()
-        let realEndDate = new Date(value).getTime()
-        if (realEndDate <= realStartDate) {
-            throw new Error("end Date cannot be on or before start Date")
-        }
-        return value
-    }),
-    check('endDate')
-        .exists({ checkFalsy: true })
-        .notEmpty()
-        .isDate()
-        .withMessage("Needs to be in a form of date 'yyyy-mm-dd'"),
-    handleValidationErrors
-]
-
+// Get all of the Current User's Bookings
 router.get("/current", restoreUser, requireAuth, async (req, res) => {
     let bookings = await Booking.findAll({
         where: {
@@ -87,7 +45,8 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
     })
 })
 
-router.put("/:bookingId", validBooking, restoreUser, requireAuth, async (req, res) => {
+// Edit a Booking
+router.put("/:bookingId", restoreUser, requireAuth, validBooking, async (req, res) => {
     const { startDate, endDate } = req.body
     const bookingSpot = await Booking.findOne({
         where: {
@@ -135,6 +94,7 @@ router.put("/:bookingId", validBooking, restoreUser, requireAuth, async (req, re
     }
 })
 
+// Delete a Booking
 router.delete("/:bookingId", restoreUser, requireAuth, async (req, res, next) => {
     const book = await Booking.findOne({
         where: {

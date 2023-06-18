@@ -8,6 +8,7 @@ const { check, body } = require('express-validator');
 const { handleValidationErrors } = require("../../utils/validation");
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth")
 
+// Delete a Spot Image
 router.delete("/:spotImageId", restoreUser, requireAuth, async (req, res) => {
     const spotImage1 = await SpotImage.findOne({
         where: {

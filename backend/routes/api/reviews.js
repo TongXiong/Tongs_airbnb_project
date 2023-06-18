@@ -32,6 +32,7 @@ const validateImage = [
         handleValidationErrors
 ]
 
+// Get all Reviews of the Current User
 router.get("/current", restoreUser, requireAuth, async (req, res) => {
     const reviews = await Review.findAll({
         where : {
@@ -64,7 +65,8 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
     })
 })
 
-router.post("/:reviewId/images", validateImage, restoreUser, requireAuth, async (req, res) => {
+// Add an Image to a Review based on the Review's id
+router.post("/:reviewId/images", restoreUser, requireAuth, validateImage, async (req, res) => {
     const { url } = req.body
     const currentReview = await Review.findOne({
         where: {
@@ -113,7 +115,8 @@ router.post("/:reviewId/images", validateImage, restoreUser, requireAuth, async 
     }
 })
 
-router.put("/:reviewId", validReview, restoreUser, requireAuth, async (req, res) => {
+// Edit a Review
+router.put("/:reviewId", restoreUser, requireAuth, validReview, async (req, res) => {
     const { review, stars } = req.body
     const reviewSpot = await Review.findOne({
         where: {
@@ -150,6 +153,7 @@ router.put("/:reviewId", validReview, restoreUser, requireAuth, async (req, res)
     }
 })
 
+// Delete a Review
 router.delete("/:reviewId", restoreUser, requireAuth, async (req, res, next) => {
     const review = await Review.findOne({
         where: {

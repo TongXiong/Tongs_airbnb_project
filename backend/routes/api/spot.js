@@ -8,7 +8,7 @@ const { validPagination, validatePost, validateImage, validReview, validBooking 
 
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth");
 
-
+// Add Query Filters to Get All Spots
 const query = (req, res) => {
     let { minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
     let where = {}
@@ -32,6 +32,8 @@ const query = (req, res) => {
     }
     return where
 }
+
+// Get all Spots
 
 router.get("/", validPagination, async (req, res) => {
 
@@ -97,7 +99,7 @@ router.get("/", validPagination, async (req, res) => {
     })
 })
 
-
+// Get all Spots owned by the Current User
 router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
     const spots = await Spot.findAll({
         where: {
@@ -126,6 +128,7 @@ router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
     })
 })
 
+// Get details of a Spot from an id
 router.get("/:spotId", async (req, res) => {
     const spots = await Spot.findByPk(req.params.spotId, {
         include: [
@@ -161,6 +164,7 @@ router.get("/:spotId", async (req, res) => {
     return res.json(spots)
 })
 
+// Get all Reviews by a Spot's id
 router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOO
     const reviews = await Review.findAll({
         where: {
@@ -197,7 +201,7 @@ router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOO
     }
 })
 
-
+// Get all Bookings for a Spot based on the Spot's id
 router.get("/:spotId/bookings", restoreUser, requireAuth, async (req, res) => {
     const Bookings = await Booking.findAll({
         where: {
@@ -237,7 +241,8 @@ router.get("/:spotId/bookings", restoreUser, requireAuth, async (req, res) => {
     }
 })
 
-router.post("/:spotId/bookings", validBooking, restoreUser, requireAuth, async (req, res, next) => {
+// Create a Booking from a Spot based on the Spot's id
+router.post("/:spotId/bookings", restoreUser, requireAuth, validBooking, async (req, res, next) => {
     const { startDate, endDate } = req.body
     const currentSpot = await Spot.findOne({
         where: {
@@ -272,8 +277,8 @@ router.post("/:spotId/bookings", validBooking, restoreUser, requireAuth, async (
 })
 
 
-
-router.post("/:spotId/reviews", validReview, restoreUser, requireAuth, async (req, res) => {
+// Create a Review for a Spot based on the Spot's id
+router.post("/:spotId/reviews", restoreUser, requireAuth, validReview, async (req, res) => {
     const { review, stars } = req.body
     const currentSpot = await Spot.findOne({
         where: {
@@ -310,8 +315,8 @@ router.post("/:spotId/reviews", validReview, restoreUser, requireAuth, async (re
     }
 })
 
-
-router.post("/", validatePost, restoreUser, requireAuth, async (req, res) => {
+// Create a Spot
+router.post("/", restoreUser, requireAuth, validatePost, async (req, res) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body
     const newSpot = await Spot.create({
         ownerId: req.user.id,
@@ -330,7 +335,8 @@ router.post("/", validatePost, restoreUser, requireAuth, async (req, res) => {
     res.json(newSpot)
 })
 
-router.post("/:spotId/images", validateImage, restoreUser, requireAuth, async (req, res) => {
+// Add an Image to a Spot based on the Spot's id
+router.post("/:spotId/images", restoreUser, requireAuth, validateImage, async (req, res) => {
     const { url, preview } = req.body
     const currentSpot = await Spot.findOne({
         where: {
@@ -366,7 +372,8 @@ router.post("/:spotId/images", validateImage, restoreUser, requireAuth, async (r
     }
 })
 
-router.put("/:spotId", validatePost, restoreUser, requireAuth, async (req, res) => {
+// Edit a Spot
+router.put("/:spotId", restoreUser, requireAuth, validatePost, async (req, res) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body
     const editSpot = await Spot.findOne({
         where: {
@@ -424,6 +431,7 @@ router.put("/:spotId", validatePost, restoreUser, requireAuth, async (req, res) 
     }
 })
 
+// Delete a Spot
 router.delete("/:spotId", restoreUser, requireAuth, async (req, res, next) => {
     const spot = await Spot.findOne({
         where: {
