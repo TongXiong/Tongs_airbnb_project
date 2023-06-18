@@ -38,7 +38,7 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
             },
         ],
         attributes: ["id", "userId", "spotId", `startDate`, `endDate`, "createdAt", "updatedAt"],
-        group: ["Booking.id", "User.id", "Spot.id"]
+        group: ["Booking.id", "User.id", "Spot.id", "Spot->SpotImages.url"]
     })
     res.json({
         bookings
