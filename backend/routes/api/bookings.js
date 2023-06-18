@@ -17,10 +17,6 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
         },
         include: [
             {
-                model: User,
-                attributes: ["id"]
-            },
-            {
                 model: Spot,
                 include: {
                     model: SpotImage,
@@ -38,7 +34,7 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
             },
         ],
         attributes: ["id", "userId", "spotId", `startDate`, `endDate`, "createdAt", "updatedAt"],
-        group: ["Booking.id", "User.id", "Spot.id", "Spot->SpotImages.url"]
+        group: ["Booking.id", "Spot.id", "Spot->SpotImages.url"]
     })
     res.json({
         bookings
@@ -120,15 +116,10 @@ router.delete("/:bookingId", restoreUser, requireAuth, async (req, res, next) =>
     let realCurrent = new Date(current).getTime()
     let owner = book.Spot.ownerId
     if (book.userId === req.user.id || owner === req.user.id) {
-        if (realCurrent < end) {
+        if (realCurrent > start && realCurrent < end) {
             res.status(403)
             return res.json({
                 message: "Bookings that have been started can't be deleted"
-            })
-        } else if (realCurrent > start) {
-            res.status(400)
-            return res.json({
-                message: "Past bookings can't be deleted"
             })
         } else if (book) {
                 await book.destroy()

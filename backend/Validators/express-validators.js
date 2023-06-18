@@ -63,7 +63,8 @@ const validateImage = [
         .exists({ checkFalsy: true })
         .notEmpty()
         .isBoolean()
-        .withMessage("is it previewed?"),
+        .isString()
+        .withMessage("must be a string of true or false"),
     handleValidationErrors
 ]
 
