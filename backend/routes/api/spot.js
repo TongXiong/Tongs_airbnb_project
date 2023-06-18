@@ -187,7 +187,7 @@ router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOO
             }
         ],
         attributes: ["id", "userId", "spotId", "review", "stars", "createdAt", "updatedAt"],
-        group: ["Review.id", "User.id", "Spot.id", "ReviewImage.id"]
+        group: ["Review.id", "User.id", "Spot.id"]
     })
     if (!reviews.length) {
         res.status(404)
