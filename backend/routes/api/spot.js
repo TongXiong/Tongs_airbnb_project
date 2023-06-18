@@ -39,15 +39,15 @@ const query = (req, res) => {
         }
     }
     if (minPrice && maxPrice) {
-        where.Price = {
+        where.price = {
             [Op.between]: [minPrice, maxPrice]
         }
     } else if (minPrice) {
-        where.Price = {
+        where.price = {
             [Op.gte]: minPrice
         }
     } else if (maxPrice) {
-        where.lat = {
+        where.price = {
             [Op.lte]: maxPrice
         }
     }
