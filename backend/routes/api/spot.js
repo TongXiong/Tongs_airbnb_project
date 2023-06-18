@@ -65,7 +65,7 @@ router.get("/", validPagination, async (req, res) => {
             },
             {
                 model: SpotImage,
-                attributes: ["url"],
+                attributes: ["id", "url", "preview"],
             }
         ],
 
