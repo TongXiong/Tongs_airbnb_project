@@ -12,23 +12,44 @@ const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth")
 const query = (req, res) => {
     let { minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
     let where = {}
-    if (minLat) {
-        where.lat = minLat
+    if (minLat && maxLat) {
+        where.lat = {
+            [Op.between]: [minLat, maxLat]
+        }
+    } else if (minLat) {
+        where.lat = {
+            [Op.gte]: minLat
+        }
+    } else if (maxLat) {
+        where.lat = {
+            [Op.lte]: maxLat
+        }
     }
-    if (maxLat) {
-        where.lat = maxLat
+    if (minLng && maxLng) {
+        where.lng = {
+            [Op.between]: [minLng, maxLng]
+        }
+    } else if (minLng) {
+        where.lng = {
+            [Op.lte]: minLng
+        }
+    } else if (maxLng) {
+        where.lng = {
+            [Op.gte]: maxLng
+        }
     }
-    if (minLng) {
-        where.lng = minLng
-    }
-    if (maxLng) {
-        where.lng = maxLng
-    }
-    if (minPrice) {
-        where.price = minPrice
-    }
-    if (maxPrice) {
-        where.price = maxPrice
+    if (minPrice && maxPrice) {
+        where.Price = {
+            [Op.between]: [minPrice, maxPrice]
+        }
+    } else if (minPrice) {
+        where.Price = {
+            [Op.gte]: minPrice
+        }
+    } else if (maxPrice) {
+        where.lat = {
+            [Op.lte]: maxPrice
+        }
     }
     return where
 }
@@ -123,9 +144,17 @@ router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
         },
         group: ["Spot.id", "SpotImages.url"]
     })
-    return res.json({
-        spots
-    })
+    if (!spots.length) {
+        res.status(404)
+        res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+    if (spots) {
+        return res.json({
+            spots
+        })
+    }
 })
 
 // Get details of a Spot from an id

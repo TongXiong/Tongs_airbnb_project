@@ -153,12 +153,13 @@ const validPagination = [
         }
         return true
     }),
-    body("minLat").custom((value, { req }) => {
+    body("minLat").custom(async (value, { req }) => {
         let number = parseInt(req.query.minLat)
         let arrKey = Object.keys(req.query)
+        console.log(arrKey)
         if (arrKey[0] === "minLat") {
             if (!isNaN(number)) {
-                return number
+
             } else {
                 throw new Error("Minimum latitude is invalid")
             }
@@ -169,7 +170,7 @@ const validPagination = [
     body("maxLat").custom((value, { req }) => {
         let number = parseInt(req.query.maxLat)
         let arrKey = Object.keys(req.query)
-        if (arrKey[0] === "maxLat") {
+        if (arrKey[1] === "maxLat") {
             if (!isNaN(number)) {
                 return number
             } else {
@@ -195,7 +196,7 @@ const validPagination = [
     body("maxLng").custom((value, { req }) => {
         let number = parseInt(req.query.maxLng)
         let arrKey = Object.keys(req.query)
-        if (arrKey[0] === "maxLng") {
+        if (arrKey[1] === "maxLng") {
             if (!isNaN(number)) {
                 return number
             } else {
@@ -224,7 +225,7 @@ const validPagination = [
     body("maxPrice").custom((value, { req }) => {
         let number = parseInt(req.query.maxPrice)
         let arrKey = Object.keys(req.query)
-        if (arrKey[0] === "maxPrice") {
+        if (arrKey[1] === "maxPrice") {
             if (!isNaN(number)) {
                 if (number < 0) {
                     throw new Error("Maximum price must be greater than or equal to 0")

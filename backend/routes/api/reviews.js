@@ -2,7 +2,7 @@ const express = require('express');
 const { Op } = require('sequelize');
 const { sequelize } = require("../../db/models")
 const bcrypt = require('bcryptjs');
-const { Spot, Review, User, Booking, SpotImage, ReviewImage} = require("../../db/models")
+const { Spot, Review, User, Booking, SpotImage, ReviewImage } = require("../../db/models")
 const router = express.Router()
 const { check } = require('express-validator');
 const { handleValidationErrors } = require("../../utils/validation");
@@ -29,13 +29,13 @@ const validateImage = [
         .exists({ checkFalsy: true })
         .notEmpty()
         .withMessage("url is required"),
-        handleValidationErrors
+    handleValidationErrors
 ]
 
 // Get all Reviews of the Current User
 router.get("/current", restoreUser, requireAuth, async (req, res) => {
     const reviews = await Review.findAll({
-        where : {
+        where: {
             userId: req.user.id
         },
         include: [
@@ -60,9 +60,17 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
         attributes: ["id", "userId", "spotId", "review", "stars", "createdAt", "updatedAt"],
         group: ["Review.id", "User.id", "Spot.id", "ReviewImages.url", "ReviewImages.id"]
     })
-    res.json({
-        reviews
-    })
+    if (!reviews.length) {
+        res.status(404)
+        return res.json({
+            message: "Reviews couldn't be found"
+        })
+    }
+    if (reviews) {
+        return res.json({
+            reviews
+        })
+    }
 })
 
 // Add an Image to a Review based on the Review's id
@@ -103,7 +111,7 @@ router.post("/:reviewId/images", restoreUser, requireAuth, validateImage, async 
             })
         } else {
             res.status(403)
-           return res.json({
+            return res.json({
                 message: "Maximum number of images for this resource was reached"
             })
         }

@@ -11,7 +11,7 @@ const { validPagination, validatePost, validateImage, validReview, validBooking 
 
 // Get all of the Current User's Bookings
 router.get("/current", restoreUser, requireAuth, async (req, res) => {
-    let bookings = await Booking.findAll({
+    const bookings = await Booking.findAll({
         where: {
             userId: req.user.id
         },
@@ -36,9 +36,18 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
         attributes: ["id", "userId", "spotId", `startDate`, `endDate`, "createdAt", "updatedAt"],
         group: ["Booking.id", "Spot.id", "Spot->SpotImages.url"]
     })
-    res.json({
-        bookings
-    })
+
+    if (!bookings.length) {
+        res.status(404)
+        return res.json({
+            message: "Bookings couldn't be found"
+        })
+    }
+    if (bookings) {
+        return res.json({
+            bookings
+        })
+    }
 })
 
 // Edit a Booking
