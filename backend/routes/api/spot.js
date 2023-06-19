@@ -95,7 +95,6 @@ router.get("/", validPagination, async (req, res) => {
 
     const all = spots.map(spot => {
         const obj = spot.toJSON()
-        console.log(obj)
 
         let stars = 0;
 
@@ -149,7 +148,6 @@ router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
 
     const all = spots.map(spot => {
         const obj = spot.toJSON()
-        console.log(obj)
 
         let stars = 0;
 
@@ -178,7 +176,10 @@ router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
 
 // Get details of a Spot from an id
 router.get("/:spotId", async (req, res) => {
-    const spots = await Spot.findByPk(req.params.spotId, {
+    const spots = await Spot.findAll({
+        where: {
+            id: req.params.spotId
+        },
         include: [
             {
                 model: User, as: "Owner",
@@ -186,13 +187,18 @@ router.get("/:spotId", async (req, res) => {
             },
             {
                 model: Review,
-
             },
             {
                 model: SpotImage,
                 attributes: ["id", "url", "preview"],
             }
         ],
+        attributes: {
+            include: [
+                [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"]
+            ],
+
+        },
     })
 
     if (!spots.length) {
@@ -204,19 +210,17 @@ router.get("/:spotId", async (req, res) => {
 
     const all = spots.map(spot => {
         const obj = spot.toJSON()
-        console.log(obj)
-
         let stars = 0;
 
         for (let review of obj.Reviews) {
             stars += review.stars;
         }
 
-        obj.avgRating = stars / obj.Reviews.length
+        obj.avgStarRating = stars / obj.Reviews.length
 
-        if (obj.SpotImages.length > 0) {
-            obj.previewImage = obj.SpotImages[0].url
-        }
+        // if (obj.SpotImages.length > 0) {
+        //     obj.previewImage = obj.SpotImages[0].url
+        // }
 
         delete obj.Reviews;
 
@@ -228,7 +232,7 @@ router.get("/:spotId", async (req, res) => {
     return res.json({
         Spots: all,
     })
-}),
+})
 
 //     const spots = await Spot.findByPk(req.params.spotId, {
 //         include: [
