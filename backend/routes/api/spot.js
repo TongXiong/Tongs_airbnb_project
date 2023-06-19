@@ -198,7 +198,7 @@ router.get("/:spotId", async (req, res) => {
                 [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"]
             ],
         },
-        group: ["Spot.id", "SpotImages.id", "Owner.id"]
+        group: ["Spot.id", "SpotImages.id", "Owner.id", "Reviews.id"]
     })
 
     if (!spots.length) {
