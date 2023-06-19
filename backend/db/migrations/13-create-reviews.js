@@ -34,7 +34,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       stars: {
-        type: Sequelize.NUMERIC(2, 2)
+        type: Sequelize.NUMERIC(10, 2)
       },
       createdAt: {
         allowNull: false,
