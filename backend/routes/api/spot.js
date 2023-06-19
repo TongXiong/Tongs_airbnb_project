@@ -95,6 +95,7 @@ router.get("/", validPagination, async (req, res) => {
 
     const all = spots.map(spot => {
         const obj = spot.toJSON()
+        console.log(obj)
 
         let stars = 0;
 
@@ -130,33 +131,85 @@ router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
         include: [
             {
                 model: Review,
-                attributes: [],
+
             },
             {
                 model: SpotImage,
-                attributes: []
+                attributes: ["id", "url", "preview"],
             }
         ],
-        attributes: {
-            include: [
-                [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
-                [sequelize.fn("", sequelize.col("url")), "previewImage"]
-            ],
-        },
-        group: ["Spot.id", "SpotImages.url"]
     })
+
     if (!spots.length) {
         res.status(404)
-        res.json({
+        return res.json({
             message: "Spot couldn't be found"
         })
     }
-    if (spots) {
-        return res.json({
-            spots
-        })
-    }
+
+    const all = spots.map(spot => {
+        const obj = spot.toJSON()
+        console.log(obj)
+
+        let stars = 0;
+
+        for (let review of obj.Reviews) {
+            stars += review.stars;
+        }
+
+        obj.avgRating = stars / obj.Reviews.length
+
+        if (obj.SpotImages.length > 0) {
+            obj.previewImage = obj.SpotImages[0].url
+        }
+
+        delete obj.Reviews;
+        delete obj.SpotImages;
+        
+        return obj
+
+
+    })
+
+    return res.json({
+        Spots: all,
+    })
 })
+/////////////////////////////////////////////
+//     const spots = await Spot.findAll({
+//         where: {
+//             ownerId: req.user.id
+//         },
+//         include: [
+//             {
+//                 model: Review,
+//                 attributes: [],
+//             },
+//             {
+//                 model: SpotImage,
+//                 attributes: []
+//             }
+//         ],
+//         attributes: {
+//             include: [
+//                 [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
+//                 [sequelize.fn("", sequelize.col("url")), "previewImage"]
+//             ],
+//         },
+//         group: ["Spot.id", "SpotImages.url"]
+//     })
+//     if (!spots.length) {
+//         res.status(404)
+//         res.json({
+//             message: "Spot couldn't be found"
+//         })
+//     }
+//     if (spots) {
+//         return res.json({
+//             spots
+//         })
+//     }
+// })
 
 // Get details of a Spot from an id
 router.get("/:spotId", async (req, res) => {
