@@ -14,7 +14,7 @@ module.exports = {
       {
         firstName: 'Mario',
         lastName: 'Mario',
-        email: 'marioBros@Plumbing.Co',
+        email: 'marioBros@Plumbing.co',
         username: 'mario64',
         hashedPassword: bcrypt.hashSync('password')
       },
@@ -22,29 +22,71 @@ module.exports = {
         firstName: 'Luigi',
         lastName: 'Mario',
         email: 'luigiBros@Plumbing.Co',
-        username: 'Luigi64',
+        username: 'luigi64',
         hashedPassword: bcrypt.hashSync('password2')
       },
       {
         firstName: 'Bowser',
         lastName: 'Koopa',
         email: 'evilking@conquer.co',
-        username: 'Bowser64',
+        username: 'bowser64',
         hashedPassword: bcrypt.hashSync('password3')
       },
       {
         firstName: 'Peach',
         lastName: 'Toadstool',
-        email: 'princess4@mushroom.io',
-        username: 'Peach64',
+        email: 'princess@mushroom.io',
+        username: 'peach64',
         hashedPassword: bcrypt.hashSync('password4')
       },
       {
         firstName: 'Toad',
         lastName: 'mushroom',
         email: 'toad@mushroom.io',
-        username: 'Toad64',
+        username: 'toad64',
         hashedPassword: bcrypt.hashSync('password5')
+      },
+      {
+        firstName: 'Link',
+        lastName: 'Hero',
+        email: 'hero@hyrule.co',
+        username: 'link64',
+        hashedPassword: bcrypt.hashSync('password6')
+      },
+      {
+        firstName: 'Zelda',
+        lastName: 'princess',
+        email: 'princess@hyrule.io',
+        username: 'zelda64',
+        hashedPassword: bcrypt.hashSync('password7')
+      },
+      {
+        firstName: 'Ganon',
+        lastName: 'Demise',
+        email: 'villian@hyrule.co',
+        username: 'ganon64',
+        hashedPassword: bcrypt.hashSync('password8')
+      },
+      {
+        firstName: 'Navi',
+        lastName: 'Fairy',
+        email: 'fairy@hyrule.co',
+        username: 'navi64',
+        hashedPassword: bcrypt.hashSync('password9')
+      },
+      {
+        firstName: 'Donkey',
+        lastName: 'Kong',
+        email: 'donkeykong@banana.co',
+        username: 'kong64',
+        hashedPassword: bcrypt.hashSync('password10')
+      },
+      {
+        firstName: 'Diddy',
+        lastName: 'Kong',
+        email: 'diddykong@banana.co',
+        username: 'diddy64',
+        hashedPassword: bcrypt.hashSync('password11')
       }
     ], {});
   },

@@ -14,7 +14,7 @@ module.exports = {
       {
         spotId: 1,
         url: "spoturl1",
-        preview: false,
+        preview: true,
       },
       {
         spotId: 2,
@@ -24,7 +24,7 @@ module.exports = {
       {
         spotId: 3,
         url: "spoturl3",
-        preview: false,
+        preview: true,
       },
       {
         spotId: 4,
@@ -34,6 +34,36 @@ module.exports = {
       {
         spotId: 5,
         url: "spoturl5",
+        preview: true,
+      },
+      {
+        spotId: 6,
+        url: "spoturl6",
+        preview: false,
+      },
+      {
+        spotId: 7,
+        url: "spoturl7",
+        preview: true,
+      },
+      {
+        spotId: 8,
+        url: "spoturl8",
+        preview: false,
+      },
+      {
+        spotId: 9,
+        url: "spoturl9",
+        preview: true,
+      },
+      {
+        spotId: 10,
+        url: "spoturl10",
+        preview: false,
+      },
+      {
+        spotId: 11,
+        url: "spoturl11",
         preview: false,
       },
     ], {});

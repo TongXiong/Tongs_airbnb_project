@@ -31,6 +31,30 @@ module.exports = {
         spotId: 5,
         userId: 5,
       },
+      {
+        spotId: 6,
+        userId: 6,
+      },
+      {
+        spotId: 7,
+        userId: 7,
+      },
+      {
+        spotId: 8,
+        userId: 8,
+      },
+      {
+        spotId: 9,
+        userId: 9,
+      },
+      {
+        spotId: 10,
+        userId: 10,
+      },
+      {
+        spotId: 11,
+        userId: 11,
+      },
     ], {});
   },
 

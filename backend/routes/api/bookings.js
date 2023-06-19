@@ -52,13 +52,11 @@ router.get("/current", restoreUser, requireAuth, async (req, res) => {
 
 // Edit a Booking
 router.put("/:bookingId", restoreUser, requireAuth, validBooking, async (req, res) => {
-    const { startDate, endDate } = req.body
     const bookingSpot = await Booking.findOne({
         where: {
             id: req.params.bookingId
         }
     })
-
     if (!bookingSpot) {
         const err = new Error("Booking couldn't be found")
         err.status = 404
@@ -67,7 +65,7 @@ router.put("/:bookingId", restoreUser, requireAuth, validBooking, async (req, re
             message: err.message
         })
     }
-
+    const { startDate, endDate } = req.body
     let owner = bookingSpot.userId
     if (owner === req.user.id) {
         if (bookingSpot) {

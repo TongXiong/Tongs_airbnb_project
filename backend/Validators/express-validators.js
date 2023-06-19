@@ -60,11 +60,9 @@ const validateImage = [
         .notEmpty()
         .withMessage("url is required"),
     check('preview')
-        .exists({ checkFalsy: true })
         .notEmpty()
         .isBoolean()
-        .isString()
-        .withMessage("must be a string of true or false"),
+        .withMessage("must be true or false"),
     handleValidationErrors
 ]
 

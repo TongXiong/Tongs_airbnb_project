@@ -103,6 +103,7 @@ router.get("/", validPagination, async (req, res) => {
         }
 
         obj.avgRating = stars / obj.Reviews.length
+        // parseInt(obj.avgRating)
 
         if (obj.SpotImages.length > 0) {
             obj.previewImage = obj.SpotImages[0].url
@@ -179,6 +180,7 @@ router.get("/:spotId", async (req, res) => {
                 [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
                 [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"]
             ],
+
         },
         group: ["Spot.id", "SpotImages.id", "Owner.id"]
     })
