@@ -165,7 +165,7 @@ router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
 
         delete obj.Reviews;
         delete obj.SpotImages;
-        
+
         return obj
 
 
@@ -175,41 +175,6 @@ router.get("/current", restoreUser, requireAuth, async (req, res, next) => {
         Spots: all,
     })
 })
-/////////////////////////////////////////////
-//     const spots = await Spot.findAll({
-//         where: {
-//             ownerId: req.user.id
-//         },
-//         include: [
-//             {
-//                 model: Review,
-//                 attributes: [],
-//             },
-//             {
-//                 model: SpotImage,
-//                 attributes: []
-//             }
-//         ],
-//         attributes: {
-//             include: [
-//                 [sequelize.fn("AVG", sequelize.col("stars")), "avgRating"],
-//                 [sequelize.fn("", sequelize.col("url")), "previewImage"]
-//             ],
-//         },
-//         group: ["Spot.id", "SpotImages.url"]
-//     })
-//     if (!spots.length) {
-//         res.status(404)
-//         res.json({
-//             message: "Spot couldn't be found"
-//         })
-//     }
-//     if (spots) {
-//         return res.json({
-//             spots
-//         })
-//     }
-// })
 
 // Get details of a Spot from an id
 router.get("/:spotId", async (req, res) => {
@@ -220,33 +185,85 @@ router.get("/:spotId", async (req, res) => {
                 attributes: ["id", "firstName", "lastName"],
             },
             {
-                model: SpotImage,
-                attributes: ["id", "url", "preview"]
+                model: Review,
+
             },
             {
-                model: Review,
-                attributes: []
+                model: SpotImage,
+                attributes: ["id", "url", "preview"],
             }
         ],
-        attributes: {
-            include: [
-                [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
-                [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"]
-            ],
-
-        },
-        group: ["Spot.id", "SpotImages.id", "Owner.id"]
     })
-    if (spots === null) {
-        const err = new Error("Spot couldn't be found")
-        err.status = 404
-        res.status(err.status || 500)
+
+    if (!spots.length) {
+        res.status(404)
         return res.json({
-            message: err.message
+            message: "Spot couldn't be found"
         })
     }
-    return res.json(spots)
-})
+
+    const all = spots.map(spot => {
+        const obj = spot.toJSON()
+        console.log(obj)
+
+        let stars = 0;
+
+        for (let review of obj.Reviews) {
+            stars += review.stars;
+        }
+
+        obj.avgRating = stars / obj.Reviews.length
+
+        if (obj.SpotImages.length > 0) {
+            obj.previewImage = obj.SpotImages[0].url
+        }
+
+        delete obj.Reviews;
+
+        return obj
+
+
+    })
+
+    return res.json({
+        Spots: all,
+    })
+}),
+
+//     const spots = await Spot.findByPk(req.params.spotId, {
+//         include: [
+//             {
+//                 model: User, as: "Owner",
+//                 attributes: ["id", "firstName", "lastName"],
+//             },
+//             {
+//                 model: SpotImage,
+//                 attributes: ["id", "url", "preview"]
+//             },
+//             {
+//                 model: Review,
+//                 attributes: []
+//             }
+//         ],
+//         attributes: {
+//             include: [
+//                 [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
+//                 [sequelize.fn("COUNT", sequelize.col("Reviews.id")), "numReviews"]
+//             ],
+
+//         },
+//         group: ["Spot.id", "SpotImages.id", "Owner.id"]
+//     })
+//     if (spots === null) {
+//         const err = new Error("Spot couldn't be found")
+//         err.status = 404
+//         res.status(err.status || 500)
+//         return res.json({
+//             message: err.message
+//         })
+//     }
+//     return res.json(spots)
+// })
 
 // Get all Reviews by a Spot's id
 router.get("/:spotId/reviews", async (req, res) => { // NEEEEEEEEEDS WOOOOOOOOOO
