@@ -1,0 +1,10 @@
+.root {
+     display: flex;
+     width: 20%;
+}
+
+.signup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
