@@ -1,35 +1,34 @@
+// frontend/src/components/LoginFormModal/index.js
 import React, { useState } from "react";
 import * as sessionActions from "../../store/session";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
-function LoginFormPage() {
+function LoginFormModal() {
   const dispatch = useDispatch();
-  const sessionUser = useSelector((state) => state.session.user);
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-
-  if (sessionUser) return <Redirect to="/" />;
+  const { closeModal } = useModal();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(sessionActions.login({ credential, password })).catch(
-      async (res) => {
+    return dispatch(sessionActions.login({ credential, password }))
+      .then(closeModal)
+      .catch(async (res) => {
         const data = await res.json();
-        if (data && data.errors) setErrors(data.errors);
-      }
-    );
+        if (data && data.errors) {
+          setErrors(data.errors);
+        }
+      });
   };
 
   return (
-    <div className="root">
+    <>
       <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
-        <div className="signin">
-
         <label>
           Username or Email
           <input
@@ -48,14 +47,13 @@ function LoginFormPage() {
             required
           />
         </label>
-        </div>
-        {errors.credential && <p>{errors.credential}</p>}
-        <div className="button">
+        {errors.credential && (
+          <p>{errors.credential}</p>
+        )}
         <button type="submit">Log In</button>
-        </div>
       </form>
-    </div>
+    </>
   );
 }
 
-export default LoginFormPage;
+export default LoginFormModal;
