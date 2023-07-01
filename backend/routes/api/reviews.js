@@ -96,7 +96,6 @@ router.post("/:reviewId/images", restoreUser, requireAuth, validateImage, async 
     for (let image of currentReview.ReviewImages) {
         arrOfImages.push(image.url)
     }
-    console.log(arrOfImages)
     const owner = currentReview.userId
     if (owner === req.user.id) {
         if (currentReview && arrOfImages.length < 11) {

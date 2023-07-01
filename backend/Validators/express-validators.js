@@ -154,7 +154,6 @@ const validPagination = [
     body("minLat").custom(async (value, { req }) => {
         let number = parseInt(req.query.minLat)
         let arrKey = Object.keys(req.query)
-        console.log(arrKey)
         if (arrKey[0] === "minLat") {
             if (!isNaN(number)) {
 

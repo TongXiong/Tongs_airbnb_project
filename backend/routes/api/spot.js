@@ -552,7 +552,6 @@ router.delete("/:spotId", restoreUser, requireAuth, async (req, res, next) => {
         })
     }
     const owner = spot.ownerId
-    console.log(owner)
     if (owner === req.user.id) {
         if (spot) {
             await spot.destroy()
