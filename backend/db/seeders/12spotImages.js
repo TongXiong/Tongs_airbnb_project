@@ -1,5 +1,3 @@
-import superNova from "../../images/supernova.jpg"
-
 'use strict';
 const bcrypt = require("bcryptjs");
 
@@ -15,7 +13,7 @@ module.exports = {
     return queryInterface.bulkInsert(options, [
       {
         spotId: 1,
-        url: superNova,
+        url: "superNova",
         preview: true,
       },
       {
