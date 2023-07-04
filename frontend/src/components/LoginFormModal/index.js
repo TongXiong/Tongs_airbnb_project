@@ -1,7 +1,7 @@
 // frontend/src/components/LoginFormModal/index.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as sessionActions from "../../store/session";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
@@ -19,38 +19,51 @@ function LoginFormModal() {
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
+        if (data) {
+          setErrors({error: "The provided credentials were invalid"});
         }
       });
   };
 
+  const relogin = (e) => {
+    e.preventDefault();
+    return dispatch(sessionActions.login({credential: "mario64", password: "password"}))
+    .then(closeModal)
+  }
+
   return (
     <>
       <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
+      <form className="creds" onSubmit={handleSubmit}>
+        <div className="error">
+            {errors.error && ` ${errors.error}`}
+            </div>
         <label>
-          Username or Email
           <input
             type="text"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
             required
+            placeholder="Username or Email"
           />
         </label>
         <label>
-          Password
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder="Password"
           />
         </label>
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" className="submit"
+        disabled={credential.length < 4 || password.length < 6}
+        >Log In</button>
+      <button onClick={relogin} className="user"
+      >{`Mario User`}</button>
       </form>
     </>
   );
