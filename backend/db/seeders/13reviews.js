@@ -38,13 +38,13 @@ module.exports = {
       {
         spotId: 3,
         userId: 3,
-        review: "On a non-school day, my granddaughter and I visited the Natural History Museum of Los Angeles County. Tickets must first be purchased online, selecting day and time of planned visit. Face masks must be worn at all times, except when eating. We also reserved tickets for the "Becoming Jane" exhibit on Jane Goodall. We both enjoyed the exhibit, which included a tent simulating what Jane lived in when she was in Africa. My granddaughter really enjoyed mimicking the chimpanzee's sounds alerting that a snake is nearby. There is a small restaurant to get a snack or lunch and plenty of indoor and covered outdoor seating. The gift shop offers a variety of souvenirs, toys, gifts.",
+        review: "On a non-school day, my granddaughter and I visited the Natural History Museum of Los Angeles County. Tickets must first be purchased online, selecting day and time of planned visit. Face masks must be worn at all times, except when eating. We also reserved tickets for the 'Becoming Jane' exhibit on Jane Goodall. We both enjoyed the exhibit, which included a tent simulating what Jane lived in when she was in Africa. My granddaughter really enjoyed mimicking the chimpanzee's sounds alerting that a snake is nearby. There is a small restaurant to get a snack or lunch and plenty of indoor and covered outdoor seating. The gift shop offers a variety of souvenirs, toys, gifts.",
         stars: 3.5,
       },
       {
         spotId: 3,
         userId: 4,
-        review: "I've been to many natural history museums and this one is not bad at all. Of course the dinosaur fossils are the "stars" here but the exhibition about the history of LA was also quite interesting. There was a long line at the door so it's a good idea to have some kind of advance ticket before you go.",
+        review: "I've been to many natural history museums and this one is not bad at all. Of course the dinosaur fossils are the 'stars' here but the exhibition about the history of LA was also quite interesting. There was a long line at the door so it's a good idea to have some kind of advance ticket before you go.",
         stars: 3.5,
       },
       {
