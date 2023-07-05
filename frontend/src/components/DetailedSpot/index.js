@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react"
-import { oneSpot } from "../../store/spotreducer"
+import { oneSpot, review } from "../../store/spotreducer"
 import { Link } from "react-router-dom"
 import { useHistory } from "react-router-dom"
 import { useParams } from "react-router-dom"
+import Review from "../reviews/reviews"
 
 export const GetOneSpot = () => {
     const {spotId} = useParams()
@@ -19,15 +20,19 @@ export const GetOneSpot = () => {
         }
       })
 
-    useEffect(() => {
-        dispatch(oneSpot(spotId))
-    }, [dispatch])
+      console.log(spot)
+
+
+      useEffect(() => {
+          dispatch(oneSpot(spotId))
+    }, [dispatch, spotId])
 
     if (!spot) {
         return null;
     }
     const theSpot = spot[0]
     const owner = spot[0].Owner
+
     return (
 
         <div>
@@ -56,6 +61,9 @@ export const GetOneSpot = () => {
                     Reserve
                 </button>
             </div>
+            </div>
+            <div>
+                <Review spot={spot}/>
             </div>
         </div>
     )

@@ -6,6 +6,7 @@ import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
 import SpotsBrowser from "./components/spots/allSpots";
 import GetOneSpot from "./components/DetailedSpot";
+import Review from "./components/reviews/reviews";
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -16,13 +17,14 @@ function App() {
   return (
     <>
       <Navigation isLoaded={isLoaded} />
-      {isLoaded && <Switch></Switch>}
+      {isLoaded && <Switch>
       <Route exact path="/">
     <SpotsBrowser />
       </Route>
       <Route path="/spots/:spotId">
         <GetOneSpot />
       </Route>
+        </Switch>}
       </>
   );
 }

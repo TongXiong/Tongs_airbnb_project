@@ -1,6 +1,6 @@
 const ALL_SPOTS = "spotreducer/allSpots"
 const ONE_SPOT = "spotreducer/ONE_SPOT"
-
+const ONE_REVIEW = "spotreducer/ONE_REVIEW"
 export const getSpots = (spots) => {
     return {
         type: ALL_SPOTS,
@@ -11,6 +11,13 @@ export const getSpots = (spots) => {
 export const detailedSpot = (Spot) => {
     return {
         type: ONE_SPOT,
+        Spot
+    }
+}
+
+export const reviewById = (Spot) => {
+    return {
+        type: ONE_REVIEW,
         Spot
     }
 }
@@ -41,6 +48,16 @@ export const oneSpot = (spotId) => {
     }
 }
 
+export const review = (spotId) => {
+    return async (dispatch, getState) => {
+        const res = await fetch(`/api/spots/${spotId}/reviews`)
+        if (res.ok) {
+            const review = await res.json()
+            dispatch(reviewById(review))
+        }
+    }
+}
+
 const iniState = {}
 
 const spotReducer = (state = iniState, action) => {
@@ -54,9 +71,9 @@ const spotReducer = (state = iniState, action) => {
         // page: action.spots[1], size: action.spots[2]
       case ONE_SPOT:
         return {...state, [action.Spot.Spots[0].id]: action.Spot.Spots};
-    //   case UPDATE_REPORT:
-    //     return { ...state, [action.report.id]: action.report };
-    //   case REMOVE_REPORT:
+      case ONE_REVIEW:
+        return {...state, ["review"] : action.Spot.reviews};
+    //   case REMOVE_REPORT
     //     const newState = { ...state };
     //     delete newState[action.reportId];
     //     return newState;
