@@ -13,7 +13,6 @@
 .landingpage li {
     display: flex;
     flex-direction: column;
-
 }
 
 .landingpage .images {

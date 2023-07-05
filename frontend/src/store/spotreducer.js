@@ -8,10 +8,10 @@ export const getSpots = (spots) => {
     }
 }
 
-export const detailedSpot = (SpotId) => {
+export const detailedSpot = (Spot) => {
     return {
         type: ONE_SPOT,
-        SpotId
+        Spot
     }
 }
 
@@ -21,6 +21,19 @@ export const retrieveSpots = () => {
         if (res.ok) {
             const spots = await res.json()
             dispatch(getSpots(spots))
+        } else {
+            const error = res.json()
+            return error;
+        }
+    }
+}
+
+export const oneSpot = (spotId) => {
+    return async (dispatch, getState) => {
+        const res = await fetch (`/api/spots/${spotId}`)
+        if (res.ok) {
+            const spot = await res.json()
+            dispatch(detailedSpot(spot))
         } else {
             const error = res.json()
             return error;
@@ -39,8 +52,8 @@ const spotReducer = (state = iniState, action) => {
         })
         return {...spotState};
         // page: action.spots[1], size: action.spots[2]
-    //   case RECEIVE_REPORT:
-    //     return { ...state, [action.report.id]: action.report };
+      case ONE_SPOT:
+        return {...state, [action.Spot.Spots[0].id]: action.Spot.Spots};
     //   case UPDATE_REPORT:
     //     return { ...state, [action.report.id]: action.report };
     //   case REMOVE_REPORT:
