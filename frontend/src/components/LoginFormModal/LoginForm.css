@@ -16,3 +16,68 @@
     display: flex;
     margin-top: 12px;
 }
+
+#modal-content{
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    width: 400px;
+    margin-bottom: 250px;
+}
+
+#modal h1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0px;
+}
+
+#modal form.creds {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+}
+
+#modal form.creds input{
+    background-color: rgb(220, 239, 246);
+    width: 350px;
+}
+
+#modal form.creds button.submit{
+    color: white;
+    display: flex;
+    margin-top: 10px;
+    width: 350px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
+}
+
+button:disabled,
+#modal form.creds button.submit[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+#modal #modal-content button.user {
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90px;
+    height: 30px;
+    margin-top: 10px;
+    color: rgb(32, 80, 80);
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+
+.error {
+    color: red;
+    margin-bottom: 25px;
+    margin-top: 10px;
+}

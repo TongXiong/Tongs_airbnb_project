@@ -8,3 +8,51 @@
     flex-direction: column;
     gap: 8px;
 }
+
+form.signupform{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+}
+
+form.signupform input {
+    background-color: rgb(220, 239, 246);
+    width: 350px;
+}
+
+form.signupform button.signup{
+    color: white;
+    display: flex;
+    margin-top: 10px;
+    width: 350px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
+    margin-bottom: 35px;
+}
+
+.error {
+    display: flex;
+    flex-direction: column;
+    height:80px;
+    margin-bottom: 25px;
+    margin-top: 10px;
+    gap:10px;
+}
+
+.error p {
+    display: flex;
+    text-align: center;
+    width: 350px;
+    margin: 0px;
+    color: red;
+}
+
+form.signupform button.signup[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}

@@ -1,18 +1,119 @@
-/* .hidden {
-    display: none;
-} */
+* {
+    padding: 0;
+    box-sizing: border-box;
+}
 
-/* .nav {
+body {
+    background-color: papayawhip;
+}
+
+.menu {
+    display: flex;
+    width: 70px;
+    height: 40px;
+    border-radius: 30px;
+    justify-content: flex-end;
+}
+
+.profile-dropdown {
     display: flex;
     flex-direction: column;
-} */
+    color: blue;
+    border: solid black 2px;
+    justify-content: flex-end;
+    list-style-type: none;
+    margin-top: 3px;
+    background-color: white;
+
+}
 
 .profile-dropdown.hidden {
     display: none;
 }
 
-/* .profile-dropdown {
+.greeting{
     display: flex;
     flex-direction: column;
-    color: red;
-} */
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid black;
+    padding: 5px;
+}
+
+.authcontainer {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    margin-right: 50px;
+    margin-top: 10px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+div.nav {
+    display: flex;
+    list-style-type: none;
+    justify-content: space-evenly;
+    margin-left: 10px;
+    overflow: hidden;
+}
+
+.menucontainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+div.awesomefont {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    gap: 5px;
+}
+
+
+.menubtn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.auth {
+    position: absolute;
+    height: 0px;
+    right: 50px;
+}
+
+.logout {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.logout button {
+    border-radius: 40%;
+    width: 80px;
+    height: 40px;
+}
+
+.signup_login {
+    display: flex;
+    flex-direction: column;
+    width: 130px;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: white;
+    padding: 5px;
+    padding-left: 10px;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    border-bottom: 2px solid rgb(198, 198, 198);
+    background-color: white;
+}

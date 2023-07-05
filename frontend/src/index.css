@@ -1,1 +1,15 @@
 /* TODO Add site wide styles */
+
+.logo{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    width: 30%;
+    gap: 0px;
+}
+
+.logo h1 {
+    color: red;
+    font-size: 24px;
+    font-weight: bold;
+}
