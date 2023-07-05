@@ -1,9 +1,17 @@
 const ALL_SPOTS = "spotreducer/allSpots"
+const ONE_SPOT = "spotreducer/ONE_SPOT"
 
 export const getSpots = (spots) => {
     return {
         type: ALL_SPOTS,
         spots: Object.values(spots)
+    }
+}
+
+export const detailedSpot = (SpotId) => {
+    return {
+        type: ONE_SPOT,
+        SpotId
     }
 }
 
@@ -29,7 +37,8 @@ const spotReducer = (state = iniState, action) => {
         action.spots[0].forEach((el) => {
             spotState[el.id] = el
         })
-        return {...spotState, page: action.spots[1], size: action.spots[2]};
+        return {...spotState};
+        // page: action.spots[1], size: action.spots[2]
     //   case RECEIVE_REPORT:
     //     return { ...state, [action.report.id]: action.report };
     //   case UPDATE_REPORT:

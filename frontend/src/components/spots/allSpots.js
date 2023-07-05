@@ -3,8 +3,11 @@ import { useEffect, useState } from "react"
 import { retrieveSpots } from "../../store/spotreducer"
 import { Link } from "react-router-dom"
 import { useHistory } from "react-router-dom"
+import { useParams } from "react-router-dom"
+import "./allspots.css"
 
 export const SpotsBrowser = () => {
+    console.log(useParams())
     const dispatch = useDispatch()
     const history = useHistory()
 
@@ -26,21 +29,24 @@ export const SpotsBrowser = () => {
     const spotsArr = Object.values(spots)
 
     const handleClick = () => {
-        history.push(`/api/spots/${spots.id}`)
+        const spot = spotsArr.find((spot) => {
+
+        })
     }
 
 
     return (
-        <div>
+        <div className="landingpage">
             <ul>
                 {spotsArr.map((spot) => {
-                    return <span key={spot.id}>
+                    return <span key={spot.id} className="listcontainer">
                         <li>
-                            <img src={spot.previewImage} onClick={handleClick}></img>
-                            <h3>{spot.city}</h3>
-                            <h3>{spot.state}</h3>
-                            <h3> star {spot.avgRating}</h3>
-                            <h3>${spot.price} night </h3>
+                            <img src={spot.previewImage} className="images" onClick={handleClick}></img>
+                            <div className="info">
+                            <h3>{spot.city}, {spot.state}</h3>
+                            <h3> ★ {spot.avgRating}</h3>
+                            </div>
+                            <h3 className="price">${spot.price} night </h3>
                         </li>
                     </span>
                 })}
