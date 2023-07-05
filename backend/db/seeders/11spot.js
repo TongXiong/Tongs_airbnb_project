@@ -14,13 +14,13 @@ module.exports = {
       {
         ownerId: 1,
         address: "Elm street",
-        city: "Supernova",
+        city: "Moon",
         state: "California",
         country: "United States of America",
         lat: 22.11111111,
         lng: -22.11111111,
         name: "FireNation",
-        description: "The only nation of Fire",
+        description: "The only nation of rocks",
         price: 12.51,
       },
       {
