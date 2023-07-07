@@ -1,0 +1,17 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.signin {
+    width: 125px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+}
+
+.modalButton {
+    display: flex;
+}

@@ -5,10 +5,11 @@ import { Link } from "react-router-dom"
 import { useHistory } from "react-router-dom"
 import { useParams } from "react-router-dom"
 import Review from "../reviews/reviews"
+import UpdateSpot from "../updateSpot";
 
-export const GetOneSpot = () => {
+
+export const GetOneSpot = ({spots}) => {
     const {spotId} = useParams()
-
     const dispatch = useDispatch()
     const history = useHistory()
 
@@ -20,8 +21,6 @@ export const GetOneSpot = () => {
         }
       })
 
-      console.log(spot)
-
 
       useEffect(() => {
           dispatch(oneSpot(spotId))
@@ -32,7 +31,6 @@ export const GetOneSpot = () => {
     }
     const theSpot = spot[0]
     const owner = spot[0].Owner
-
     return (
 
         <div>

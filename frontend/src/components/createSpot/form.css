@@ -1,0 +1,22 @@
+.create-spot-form {
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+    flex-direction: column;
+}
+
+.create-spot-form #infocontainer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0px;
+    height: 20px;
+}
+
+.create-spot-form .createspoterror p{
+    margin: 0px;
+}
+
+.createspoterror {
+    color: red;
+}

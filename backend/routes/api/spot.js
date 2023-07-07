@@ -422,7 +422,7 @@ router.post("/:spotId/reviews", restoreUser, requireAuth, validReview, async (re
 
 // Create a Spot
 router.post("/", restoreUser, requireAuth, validatePost, async (req, res) => {
-    const { address, city, state, country, lat, lng, name, description, price } = req.body
+    const { address, city, state, country, lat, lng, name, description, price, images} = req.body
     const newSpot = await Spot.create({
         ownerId: req.user.id,
         address,
@@ -433,7 +433,8 @@ router.post("/", restoreUser, requireAuth, validatePost, async (req, res) => {
         lng,
         name,
         description,
-        price
+        price,
+        images
     })
 
     res.status(201)

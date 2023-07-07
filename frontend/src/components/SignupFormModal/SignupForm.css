@@ -34,14 +34,14 @@ form.signupform button.signup{
     margin-bottom: 35px;
 }
 
-.error {
+/* .error {
     display: flex;
     flex-direction: column;
     height:80px;
     margin-bottom: 25px;
     margin-top: 10px;
     gap:10px;
-}
+} */
 
 .error p {
     display: flex;

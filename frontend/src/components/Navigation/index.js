@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import './Navigation.css';
 import logo from "../../images/pngegg.png"
+import NewSpot from "../createSpot"
 
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
@@ -16,6 +17,11 @@ function Navigation({ isLoaded }){
       <div className="title">
         <NavLink exact to="/" className="logo"><img className="logo"  alt="Trees" src={logo}/>
         <h1>OneStop</h1>
+        </NavLink>
+      </div>
+      <div className='create'>
+        <NavLink exact to="/spots">
+          create new spot
         </NavLink>
       </div>
       {isLoaded && (
