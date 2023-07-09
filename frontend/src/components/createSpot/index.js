@@ -11,14 +11,21 @@ import "./form.css"
 export const NewSpot = () => {
 
     const newSpot = useSelector((state) => {
-        if (state.spots) {
-            return state.spots
+        if (state.spot) {
+            return state.spot
         } else {
-            return null;
+            return null
         }
     })
 
-        const ulRef = useRef();
+    const fileTypes = (url) => {
+        url = `${url}`;
+        if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith("jpeg")) {
+            return true;
+        } else {
+            return false;
+        }
+      };
 
         const dispatch = useDispatch()
         const history = useHistory()
@@ -32,8 +39,13 @@ export const NewSpot = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState("")
     const [price, setPrice] = useState()
+    const [clientsideErrors, setclientsideErrors] = useState({})
     const [validErrors, setValidErrors] = useState({})
-    const [image, setImage] = useState("")
+    const [previewImage, setPreviewImage] = useState ("")
+    const [image1, setImage1] = useState("");
+    const [image2, setImage2] = useState("");
+    const [image3, setImage3] = useState("");
+    const [image4, setImage4] = useState("");
 
     const updateAddress = (e) => setAddress(e.target.value);
     const updateCity = (e) => setCity(e.target.value);
@@ -44,20 +56,34 @@ export const NewSpot = () => {
     const updateName = (e) => setName(e.target.value);
     const updateDescription = (e) => setDescription(e.target.value);
     const updatePrice = (e) => setPrice(parseInt(e.target.value));
-    const updateImage = (e) => setImage(e.target.value)
-
+    const updatePreview = (e) => setPreviewImage(e.target.value)
+    const updateImage1 = (e) => setImage1(e.target.value)
+    const updateImage2 = (e) => setImage2(e.target.value)
+    const updateImage3 = (e) => setImage3(e.target.value)
+    const updateImage4 = (e) => setImage4(e.target.value)
     const [show, setShow] = useState(false)
-
-    const user = useSelector((state) => {
-        if (state.session) {
-            return state.session
-        } else {
-            return null;
-        }
-    })
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        const errors = {}
+
+    if (!previewImage.length) {
+        errors.previewImage = "Preview image is required";
+    }
+    if (image1 && !fileTypes(image1)) {
+        errors.image1 = "Image URL must end in .png, .jpg, or .jpeg";
+    }
+    if (image2 && !fileTypes(image2)) {
+        errors.image2 = "Image URL must end in .png, .jpg, or .jpeg";
+    }
+    if (image3 && !fileTypes(image3)) {
+        errors.image3 = "Image URL must end in .png, .jpg, or .jpeg";
+    }
+    if (image4 && !fileTypes(image4)) {
+        errors.image4 = "Image URL must end in .png, .jpg, or .jpeg";
+    }
+    setclientsideErrors(errors)
 
         const payload = {
             address,
@@ -71,7 +97,32 @@ export const NewSpot = () => {
             price,
         }
 
-        dispatch(createForm(payload))
+        const images = [
+            {
+                preview: true,
+                url: previewImage,
+            }
+        ]
+
+        if (image1) {
+            images.push({preview: false, url: image1})
+        }
+        if (image2) {
+            images.push({preview: false, url: image2})
+        }
+        if (image3) {
+            images.push({preview: false, url: image3})
+        }
+        if (image4) {
+            images.push({preview: false, url: image4})
+        }
+
+
+            dispatch(createForm(payload, images[0]))
+            .then(() => {
+                setValidErrors("")
+                history.push('/')
+            })
             .catch(async (res) => {
               const data = await res.json();
               if (data.errors) {
@@ -190,12 +241,90 @@ export const NewSpot = () => {
                 onChange={updatePrice}
                 >
                 </input>
+                <div id="infocontainer">
+                Preview Image URL
+                    <div className="createspoterror">
+                <p>
+                    {clientsideErrors.previewImage && ` ${clientsideErrors.previewImage}`}
+                    </p>
+                    </div>
+                </div>
                 <input
-                 type="text" onChange={updateImage}
-                value={image}
+                className="image-inputs"
+                type="url"
+                placeholder="Preview Image URL"
+                value={previewImage}
+                onChange={updatePreview}
                 >
                 </input>
-                <button type="submit">
+                <div id="infocontainer">
+                    Image Url
+                    <div className="createspoterror">
+                <p>
+                    {clientsideErrors.image1 && ` ${clientsideErrors.image1}`}
+                    </p>
+                    </div>
+                </div>
+                <input
+                className="image-inputs"
+                type="url"
+                placeholder="Image URL"
+                value={image1}
+                onChange={updateImage1}
+                >
+                </input>
+                <div id="infocontainer">
+                    Image Url
+                    <div className="createspoterror">
+                <p>
+                    {clientsideErrors.image2 && ` ${clientsideErrors.image2}`}
+                    </p>
+                    </div>
+                </div>
+                <input
+                className="image-inputs"
+                type="url"
+                placeholder="Image URL"
+                value={image2}
+                onChange={updateImage2}
+                >
+                </input>
+                <div id="infocontainer">
+                    Image Url
+                    <div className="createspoterror">
+                <p>
+                    {clientsideErrors.image3 && ` ${clientsideErrors.image3}`}
+                    </p>
+                    </div>
+                </div>
+                <input
+                className="image-inputs"
+                type="url"
+                placeholder="Image URL"
+                value={image3}
+                onChange={updateImage3}
+                >
+                </input>
+                <div id="infocontainer">
+                    Image Url
+                    <div className="createspoterror">
+                <p>
+                    {clientsideErrors.image4 && ` ${clientsideErrors.image4}`}
+                    </p>
+                    </div>
+                </div>
+                <input
+                className="image-inputs"
+                type="url"
+                placeholder="Image URL"
+                value={image4}
+                onChange={updateImage4}
+                >
+                </input>
+
+                <button type="submit"
+                // disabled={!address || !city || !state || !country || !price || !description}
+                >
                     submit
                 </button>
             </form>

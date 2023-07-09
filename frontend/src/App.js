@@ -10,6 +10,7 @@ import NewSpot from "./components/createSpot";
 import CurrentUserSpot from "./components/currentSpot";
 import UpdateSpot from "./components/updateSpot";
 import SelectiveId from "./components/updateSpot/select";
+
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -35,7 +36,6 @@ function App() {
         <CurrentUserSpot />
       </Route>
       <Route exact path="/spots/:spotId/edit">
-        <UpdateSpot />
         <SelectiveId />
       </Route>
       </>

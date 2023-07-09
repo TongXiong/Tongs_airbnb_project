@@ -154,7 +154,7 @@ export const deleteSpot = (spotId) => {
     }
   }
 
-  export const createForm = (body) => {
+  export const createForm = (body, uploads) => {
     return async (dispatch, getState) => {
         const res = await csrfFetch("/api/spots", {
             method: "POST",
@@ -163,7 +163,13 @@ export const deleteSpot = (spotId) => {
         })
         if (res.ok) {
             const newSpot = await res.json()
-            dispatch(createSpot(newSpot))
+            const pics = await csrfFetch(`/api/spots/${newSpot.id}/images`, {
+                method: "POST",
+                body: JSON.stringify(uploads)
+            })
+            if (pics.ok) {
+                dispatch(createSpot(newSpot))
+            }
         } else {
             const errors = await res.json()
             return errors;
@@ -191,7 +197,6 @@ export const updateSpotForm = (body, spotId) => {
     return async (dispatch, getState) => {
         const res = await csrfFetch(`/api/spots/${spotId}`, {
             method: "PUT",
-            headers: {"Content-type": "application/json"},
             body: JSON.stringify(body)
         })
         if (res.ok) {
@@ -203,8 +208,6 @@ export const updateSpotForm = (body, spotId) => {
         }
     }
 }
-
-
 
 //   export const newImage = (spotId, image) => {
 //     return async (dispatch, getState) => {
@@ -252,7 +255,8 @@ const spotReducer = (state = iniState, action) => {
         delete newState1.spot[action.review]
         return newState1
     case CREATE_SPOT:
-        const newState2 = {...state, spot: {...state.spot, ...action.spot}}
+        const newState2 = {...state, spot: {...state.spot}}
+        newState2.spot = action.spot
         return newState2;
     case CREATE_IMAGE:
         const newState3 = {...state, spot: {...state.spot, ['Images']: action.image}}
@@ -261,7 +265,8 @@ const spotReducer = (state = iniState, action) => {
         const newState4 ={...state, spot: {...state.spot, ["review"]: action.review}}
         return newState4;
     case UPDATE_SPOT:
-        const newstate5 ={...state, spot: {...state.spot, ...action.spot}}
+        const newstate5 ={...state, spot: {...state.spot}}
+        newstate5.spot = action.spot
         return newstate5;
     // action.Review = id
       // case ADD_REPORT:

@@ -7,22 +7,36 @@ import { updateSpotForm } from "../../store/spotreducer"
 import { oneSpot } from "../../store/spotreducer"
 
 export const UpdateSpot = ({spot}) => {
+
+    const fileTypes = (url) => {
+        url = `${url}`;
+        if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith("jpeg")) {
+            return true;
+        } else {
+            return false;
+        }
+      };
+
+
     const dispatch = useDispatch()
+    const history = useHistory()
     const theSpot = useParams()
     const id = theSpot.spotId
-
-
-    const [address, setAddress] = useState();
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [country, setCountry] = useState('');
+    const [address, setAddress] = useState(spot.address);
+    const [city, setCity] = useState(spot.city);
+    const [state, setState] = useState(spot.state);
+    const [country, setCountry] = useState(spot.country);
     const [lat, setLat] = useState();
     const [lng, setLng] = useState();
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState("")
-    const [price, setPrice] = useState()
+    const [name, setName] = useState(spot.name);
+    const [description, setDescription] = useState(spot.description)
+    const [price, setPrice] = useState(spot.price)
+    const [previewImage, setPreviewImage] = useState ("")
+    const [image1, setImage1] = useState("");
+    const [image2, setImage2] = useState("");
+    const [image3, setImage3] = useState("");
+    const [image4, setImage4] = useState("");
     const [validErrors, setValidErrors] = useState({})
-    const [image, setImage] = useState("")
 
     const updateAddress = (e) => setAddress(e.target.value);
     const updateCity = (e) => setCity(e.target.value);
@@ -33,7 +47,6 @@ export const UpdateSpot = ({spot}) => {
     const updateName = (e) => setName(e.target.value);
     const updateDescription = (e) => setDescription(e.target.value);
     const updatePrice = (e) => setPrice(parseInt(e.target.value));
-    const updateImage = (e) => setImage(e.target.value)
 
     const [show, setShow] = useState(false)
 
@@ -53,6 +66,10 @@ export const UpdateSpot = ({spot}) => {
         }
 
         dispatch(updateSpotForm(payload, id))
+        .then(() => {
+            setValidErrors("")
+            history.push(`/spots/${id}`)
+        })
             .catch(async (res) => {
               const data = await res.json();
               if (data.errors) {
@@ -65,10 +82,10 @@ export const UpdateSpot = ({spot}) => {
 
     return (
         <div>
-            <form className="update-spot-form" onSubmit={handleSubmit}>
+            <form className="create-spot-form" onSubmit={handleSubmit}>
                 <div id="infocontainer">
                 Address
-                    <div className="updatespoterror">
+                    <div className="createspoterror">
                 <p>
                     {validErrors.address && ` ${validErrors.address}`}
                     </p>
@@ -83,7 +100,7 @@ export const UpdateSpot = ({spot}) => {
                 </input>
                 <div id="infocontainer">
                 City
-                    <div className="updatespoterror">
+                    <div className="createspoterror">
                 <p>
                     {validErrors.city && ` ${validErrors.city}`}
                     </p>
@@ -98,7 +115,7 @@ export const UpdateSpot = ({spot}) => {
                 </input>
                 <div id="infocontainer">
                 State
-                    <div className="updatespoterror">
+                    <div className="createspoterror">
                 <p>
                     {validErrors.state && ` ${validErrors.state}`}
                     </p>
@@ -113,7 +130,7 @@ export const UpdateSpot = ({spot}) => {
                 </input>
                 <div id="infocontainer">
                 Country
-                    <div className="updatespoterror">
+                    <div className="createspoterror">
                 <p>
                     {validErrors.country && ` ${validErrors.country}`}
                     </p>
@@ -128,7 +145,7 @@ export const UpdateSpot = ({spot}) => {
                 </input>
                 <div id="infocontainer">
                 Description
-                    <div className="updatespoterror">
+                    <div className="createspoterror">
                 <p>
                     {validErrors.description && ` ${validErrors.description}`}
                     </p>
@@ -143,7 +160,7 @@ export const UpdateSpot = ({spot}) => {
                 </input>
                 <div id="infocontainer">
                 Name
-                    <div className="updatespoterror">
+                    <div className="createspoterror">
                 <p>
                     {validErrors.name && ` ${validErrors.address}`}
                     </p>
@@ -158,7 +175,7 @@ export const UpdateSpot = ({spot}) => {
                 </input>
                 <div id="infocontainer">
                 Price
-                    <div className="updatespoterror">
+                    <div className="createspoterror">
                 <p>
                     {validErrors.price && ` ${validErrors.price}`}
                     </p>
@@ -172,8 +189,6 @@ export const UpdateSpot = ({spot}) => {
                 >
                 </input>
                 <input
-                 type="text" onChange={updateImage}
-                value={image}
                 >
                 </input>
                 <button type="submit">

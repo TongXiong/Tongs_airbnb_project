@@ -12,10 +12,6 @@ export const CurrentUserSpot = ({user}) => {
     const history = useHistory()
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        dispatch(retrieveSpotsbyUser())
-    },[dispatch])
-
     const spots = useSelector((state) => {
         if (state.spots) {
             return Object.values(state.spots)
@@ -24,7 +20,14 @@ export const CurrentUserSpot = ({user}) => {
         }
     })
 
+    console.log(spots)
+
     const arr = (spots.flat())
+
+    useEffect(() => {
+        dispatch(retrieveSpotsbyUser())
+    },[dispatch, spots])
+
     return (
         <div>
             <h1> Manage your Spots</h1>
