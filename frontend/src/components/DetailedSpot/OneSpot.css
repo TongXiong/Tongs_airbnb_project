@@ -1,0 +1,12 @@
+.titleinfo {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.bigimages {
+    width: 600px;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 25px;
+}

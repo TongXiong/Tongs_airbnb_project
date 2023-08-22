@@ -6,62 +6,78 @@ import { useHistory } from "react-router-dom"
 import { useParams } from "react-router-dom"
 import Review from "../reviews/reviews"
 import UpdateSpot from "../updateSpot";
+import "./OneSpot.css"
 
 
-export const GetOneSpot = ({spots}) => {
+export const GetOneSpot = () => {
     const {spotId} = useParams()
     const dispatch = useDispatch()
     const history = useHistory()
 
-    const spot = useSelector((state) => {
+    const theSpot = useSelector((state) => {
         if (state.spots) {
-          return state.spots[spotId]
+          return state.spots[spotId][0]
         } else {
           return null
         }
       })
 
+      const newFeature = () => {
+        alert("Feature coming soon!")
+      }
 
       useEffect(() => {
           dispatch(oneSpot(spotId))
     }, [dispatch, spotId])
 
-    if (!spot) {
+    if (!theSpot) {
         return null;
     }
-    const theSpot = spot[0]
-    const owner = spot[0].Owner
-    return (
+    const theOwner = theSpot.Owner
+    const images = [theSpot.SpotImages[0]]
 
+    const bigImage = images.shift()
+
+    return (
         <div>
-            <div className="title">
+            <div className="titleinfo">
             <h1>
                 {theSpot.name}
             </h1>
             <h3> {theSpot.city} {theSpot.state} {theSpot.country}</h3>
             </div>
-            <div className="images">
-                <div className="bigimage">
-                    <img src="" ></img>
+            <div className="bigimagecontainer">
+                <div>
+                    <img src={bigImage.url} className="bigimages"></img>
                 </div>
-                <div className="smallimage">
-                    <img src=""></img>
-                </div>
+                <ul className="smallimagecontainer">
+                    {images.map((image) => {
+                        return <span key={image.id}>
+                            <li>
+                                <img src={image.url} className="smallimages"/>
+                            </li>
+                        </span>
+                    })}
+                </ul>
             </div>
             <div className="Desciptions">
-            <div className="host">
-                <h1> Hosted By {owner.firstName} {owner.lastName}</h1>
-                <p>{theSpot.description}</p>
+            <div>
+                <div className="host"> Hosted By {theOwner.firstName} {theOwner.lastName}</div>
+                <div className="paragraph">{theSpot.description}</div>
             </div>
             <div className="info">
-                ${theSpot.price} night {theSpot.avgStarRating} {theSpot.numReviews} reviews
-                <button>
+                ${theSpot.price} night {(theSpot.avgStarRating) ? (!Number.isInteger(theSpot.avgStarRating)) ? `${Math.round(theSpot.avgStarRating)}.0` : `${theSpot.avgStarRating}.0` : ""} {theSpot.numReviews} reviews
+                <button
+                onClick={(() => {
+                    newFeature()
+                })}
+                >
                     Reserve
                 </button>
             </div>
             </div>
             <div>
-                <Review spot={spot}/>
+                <Review spot={theSpot}/>
             </div>
         </div>
     )

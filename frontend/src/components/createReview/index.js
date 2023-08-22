@@ -13,7 +13,7 @@ import "./createreview.css"
 
 
 export const CreateReview = ({spot}) => {
-    const id = spot[0].id
+    const id = spot.id
     const dispatch = useDispatch()
     const {closeModal} = useModal()
     const [review, setReview] = useState("")

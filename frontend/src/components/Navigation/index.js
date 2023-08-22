@@ -3,12 +3,23 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
+import {useState, useEffect} from "react"
 import './Navigation.css';
 import logo from "../../images/pngegg.png"
 import NewSpot from "../createSpot"
 
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
+
+  const [create, setCreate] = useState("create")
+
+  useEffect(() => {
+    if (!sessionUser) {
+      setCreate("createHidden")
+    } else {
+      setCreate("create")
+    }
+  }, [create, sessionUser])
 
   return (
     <>
@@ -19,8 +30,8 @@ function Navigation({ isLoaded }){
         <h1>OneStop</h1>
         </NavLink>
       </div>
-      <div className='create'>
-        <NavLink exact to="/spots">
+      <div>
+        <NavLink exact to="/spots" className={create}>
           create new spot
         </NavLink>
       </div>

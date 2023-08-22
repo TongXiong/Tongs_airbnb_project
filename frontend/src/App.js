@@ -8,7 +8,6 @@ import SpotsBrowser from "./components/spots/allSpots";
 import GetOneSpot from "./components/DetailedSpot";
 import NewSpot from "./components/createSpot";
 import CurrentUserSpot from "./components/currentSpot";
-import UpdateSpot from "./components/updateSpot";
 import SelectiveId from "./components/updateSpot/select";
 
 function App() {
@@ -31,13 +30,13 @@ function App() {
       <Route exact path="/spots">
         <NewSpot />
       </Route>
-        </Switch>}
       <Route exact path="/spots/current">
         <CurrentUserSpot />
       </Route>
       <Route exact path="/spots/:spotId/edit">
         <SelectiveId />
       </Route>
+        </Switch>}
       </>
   );
 }

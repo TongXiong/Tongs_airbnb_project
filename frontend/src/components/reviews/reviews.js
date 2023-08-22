@@ -8,6 +8,7 @@ import DeleteReview from "../DeleteReview"
 import ReviewDeleteModal from "../ReviewModalButton"
 import CreateReviewModal from "../createReviewModal"
 import UpdateSpot from "../updateSpot";
+
 export const Review = ({spot}) => {
     const {spotId} = useParams()
     const dispatch = useDispatch()
@@ -29,16 +30,28 @@ export const Review = ({spot}) => {
         }
         const arr = Object.values(reviewOfId)
         const reviewArr = arr[0]
-        const reviewUser = reviewArr.User
-        
+        let stars;
+
+        if (spot.avgStarRating) {
+          if (!Number.isInteger(spot.avgStarRating)) {
+            stars = `${Math.round(spot.avgStarRating)}.0`
+          } else {
+            stars = `${spot.avgStarRating}.0`
+          }
+        }
+        else {
+          stars = "New"
+        }
+
+
   return (
     <div className="container">
       <div className="title">
-    <h1> ★ {reviewArr.stars}</h1>
+    <h1> ★ {stars}</h1>
     <div>
       <CreateReviewModal spot={spot}/>
     </div>
-    <h1> {spot[0].numReviews} reviews</h1>
+    <h1> {spot.numReviews} reviews</h1>
       </div>
       <ul>
           {arr.map((review) => {

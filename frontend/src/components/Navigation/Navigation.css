@@ -82,9 +82,10 @@ div.awesomefont {
 }
 
 .auth {
+    display: flex;
+    flex-direction: column;
     position: absolute;
-    height: 0px;
-    right: 50px;
+    top: 50px;
 }
 
 .logout {
@@ -119,5 +120,10 @@ div.awesomefont {
 }
 
 .create {
-    display:
+    display: flex;
+    text-decoration: none;
+}
+
+.createHidden {
+    display: none;
 }

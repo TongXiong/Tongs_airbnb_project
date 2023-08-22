@@ -30,7 +30,7 @@ function Root() {
   return (
     <ModalProvider>
       <Provider store={store}>
-        <BrowserRouter forceRefresh>
+        <BrowserRouter>
           <App />
           <Modal />
         </BrowserRouter>

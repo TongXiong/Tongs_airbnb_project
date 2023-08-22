@@ -1,18 +1,29 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react"
 import { retrieveSpots } from "../../store/spotreducer"
-import { NavLink, Route } from "react-router-dom"
 import { useHistory} from "react-router-dom"
-import DeleteById from "../DeleteSpot"
-import { deleteSpot } from "../../store/spotreducer"
 import DeleteModal from "../DeleteSpot"
-import UpdateSpot from "../updateSpot"
 import "./allspots.css"
+import { Redirect } from "react-router-dom/cjs/react-router-dom.min"
 
 
 export const SpotsBrowser = () => {
     const dispatch = useDispatch()
     const history = useHistory()
+
+    const [isHover, setIsHover] = useState(false)
+
+    const handleMouseEnter = () => {
+        setIsHover(true)
+    }
+
+    const handleMouseLeave = () => {
+        setIsHover(false)
+    }
+
+    const boxStyle = {
+        cursor: isHover ? 'pointer' : 'none'
+    }
 
     const spots = useSelector((state) => {
         if (state.spots) {
@@ -21,7 +32,6 @@ export const SpotsBrowser = () => {
             return null;
         }
     })
-
     useEffect(() => {
         dispatch(retrieveSpots())
     }, [dispatch])
@@ -40,10 +50,16 @@ export const SpotsBrowser = () => {
                         <li>
                             <img src={spot.previewImage} className="images" onClick={(() => {
                                 history.push(`spots/${spot.id}`)
-                            })}></img>
+                            })}
+                            style={boxStyle}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            title={spot.name}
+                            >
+                            </img>
                             <div className="info">
                             <h3>{spot.city}, {spot.state}</h3>
-                            <h3> ★ {spot.avgRating}</h3>
+                            <h3> ★ {(spot.avgRating !== null) ? (!Number.isInteger(spot.avgRating)) ? `${Math.round(spot.avgRating)}.0` : `${spot.avgRating}.0` : "New"}</h3>
                             </div>
                             <h3 className="price">${spot.price} night </h3>
                             <DeleteModal spot={spot}/>

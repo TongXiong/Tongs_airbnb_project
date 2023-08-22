@@ -232,11 +232,11 @@ const iniState = {}
 const spotReducer = (state = iniState, action) => {
     switch (action.type) {
       case ALL_SPOTS:
-        const spotState = {...state};
+        const spotState = {};
         action.spots[0].forEach((el) => {
             spotState[el.id] = el
         })
-        return {...spotState};
+        return spotState;
         // page: action.spots[1], size: action.spots[2]
       case ONE_SPOT:
         return {...state, [action.Spot.Spots[0].id]: action.Spot.Spots};
