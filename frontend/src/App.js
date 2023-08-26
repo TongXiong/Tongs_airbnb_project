@@ -24,14 +24,14 @@ function App() {
       <Route exact path="/">
     <SpotsBrowser />
       </Route>
-      <Route exact path="/spots/:spotId">
-        <GetOneSpot />
-      </Route>
       <Route exact path="/spots">
         <NewSpot />
       </Route>
       <Route exact path="/spots/current">
         <CurrentUserSpot />
+      </Route>
+      <Route exact path="/spots/:spotId">
+        <GetOneSpot />
       </Route>
       <Route exact path="/spots/:spotId/edit">
         <SelectiveId />

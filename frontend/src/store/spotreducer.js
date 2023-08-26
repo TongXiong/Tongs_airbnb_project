@@ -9,10 +9,18 @@ const CREATE_SPOT = "spotreducer/CREATE_SPOT"
 const CREATE_IMAGE = "spotreducer/CREATE_IMAGE"
 const CREATE_REVIEW = "spotreducer/CREATE_REVIEW"
 const UPDATE_SPOT = "spotreducer/UPDATE_SPOT"
+const USER_SPOTS = "spotreducer/CURRENT_SPOT"
 
 export const getSpots = (spots) => {
     return {
         type: ALL_SPOTS,
+        spots: Object.values(spots)
+    }
+}
+
+export const userSpots = (spots) => {
+    return {
+        type: USER_SPOTS,
         spots: Object.values(spots)
     }
 }
@@ -92,7 +100,7 @@ export const retrieveSpotsbyUser = () => {
         const res = await fetch("/api/current")
         if (res.ok) {
             const spots = await res.json()
-            dispatch(getSpots(spots))
+            dispatch(userSpots(spots))
         } else {
             const error = await res.json()
             return error;
@@ -239,7 +247,9 @@ const spotReducer = (state = iniState, action) => {
         return spotState;
         // page: action.spots[1], size: action.spots[2]
       case ONE_SPOT:
-        return {...state, [action.Spot.Spots[0].id]: action.Spot.Spots};
+        return {...state, Spot: action.Spot};
+        case USER_SPOTS:
+            return action.spots
       case ONE_REVIEW:
         const currentState = {...state, "review": {}}
         action.Spot.reviews.map((review) => {

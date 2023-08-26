@@ -4,7 +4,6 @@ import { retrieveSpots } from "../../store/spotreducer"
 import { useHistory} from "react-router-dom"
 import DeleteModal from "../DeleteSpot"
 import "./allspots.css"
-import { Redirect } from "react-router-dom/cjs/react-router-dom.min"
 
 
 export const SpotsBrowser = () => {

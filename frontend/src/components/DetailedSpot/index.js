@@ -16,7 +16,7 @@ export const GetOneSpot = () => {
 
     const theSpot = useSelector((state) => {
         if (state.spots) {
-          return state.spots[spotId][0]
+          return state.spots.Spot
         } else {
           return null
         }
@@ -34,6 +34,7 @@ export const GetOneSpot = () => {
         return null;
     }
     const theOwner = theSpot.Owner
+
     const images = [theSpot.SpotImages[0]]
 
     const bigImage = images.shift()
@@ -66,7 +67,7 @@ export const GetOneSpot = () => {
                 <div className="paragraph">{theSpot.description}</div>
             </div>
             <div className="info">
-                ${theSpot.price} night {(theSpot.avgStarRating) ? (!Number.isInteger(theSpot.avgStarRating)) ? `${Math.round(theSpot.avgStarRating)}.0` : `${theSpot.avgStarRating}.0` : ""} {theSpot.numReviews} reviews
+                ${theSpot.price} night ★ {(theSpot.avgStarRating) ? (!Number.isInteger(theSpot.avgStarRating)) ? `${Math.round(theSpot.avgStarRating)}.0` : `${theSpot.avgStarRating}.0` : ""} · {theSpot.numReviews} reviews
                 <button
                 onClick={(() => {
                     newFeature()

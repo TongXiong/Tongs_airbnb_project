@@ -20,13 +20,11 @@ export const CurrentUserSpot = ({user}) => {
         }
     })
 
-    console.log(spots)
-
     const arr = (spots.flat())
 
     useEffect(() => {
         dispatch(retrieveSpotsbyUser())
-    },[dispatch, spots])
+    },[dispatch])
 
     return (
         <div>

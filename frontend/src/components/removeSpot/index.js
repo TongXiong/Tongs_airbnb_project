@@ -15,12 +15,19 @@ export const DeleteById = ({spot}) => {
 
     const dispatch = useDispatch()
     const {closeModal} = useModal()
-    
+
+
+
     const handleDelete = (e) => {
         e.preventDefault();
         dispatch(deleteSpot(spot.id))
+        .catch(async (res) => {
+            const data = await res.json()
+            alert(data.message)
+        })
         .then(closeModal)
       };
+
 
       return (
         <div>
