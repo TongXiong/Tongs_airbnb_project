@@ -14,9 +14,25 @@ import "./modalreview.css"
 export const ReviewDeleteModal = ({review}) => {
     const dispatch = useDispatch()
 
+    const [show, setShow] = useState("show")
+
+    const sessionUser = useSelector((state) => {
+        if (state.session) {
+            return state.session.user
+        } else {
+            return null
+        }
+    })
+
+    useEffect(() => {
+        if (review.User.firstName !== sessionUser.firstName) {
+            return setShow("noshow")
+        }
+    }, [show])
+
     return (
         <div>
-            <div>
+            <div className={show}>
             <OpenModalButton
             modalComponent={<DeleteReview review={review}/>}
             buttonText="Delete"

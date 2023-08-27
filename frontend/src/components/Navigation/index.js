@@ -20,7 +20,7 @@ function Navigation({ isLoaded }){
       setCreate("create")
     }
   }, [create, sessionUser])
-
+  
   return (
     <>
     <div className="sticky">

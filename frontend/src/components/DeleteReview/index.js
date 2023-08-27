@@ -15,7 +15,6 @@ export const DeleteReview = ({review}) => {
     const dispatch = useDispatch()
     const {closeModal} = useModal()
 
-    
     const handleDelete = (e) => {
         e.preventDefault();
         dispatch(deleteReview(review.id))

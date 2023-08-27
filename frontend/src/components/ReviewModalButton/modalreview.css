@@ -15,3 +15,8 @@
 .modalButton {
     display: flex;
 }
+
+
+.noshow {
+    display: none;
+}

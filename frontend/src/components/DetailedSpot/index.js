@@ -22,6 +22,7 @@ export const GetOneSpot = () => {
         }
       })
 
+      
       const newFeature = () => {
         alert("Feature coming soon!")
       }
