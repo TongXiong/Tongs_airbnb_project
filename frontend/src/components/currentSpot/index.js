@@ -26,12 +26,16 @@ export const CurrentUserSpot = ({user}) => {
         dispatch(retrieveSpotsbyUser())
     },[dispatch])
 
-    return (
+    if (!spots.length) return (
         <div>
-            <h1> Manage your Spots</h1>
+        <h1> Manage your Spots</h1>
             <NavLink exact to="/spots">
           create new spot
         </NavLink>
+        </div>
+    )
+    return (
+        <div>
         <div className="landingpage">
             <div>
             <ul>
