@@ -52,9 +52,9 @@ export const CurrentUserSpot = ({user}) => {
                             <h3 className="price">${spot.price} night </h3>
                             <DeleteModal spot={spot}/>
                             <NavLink to={`/spots/${spot.id}/edit`}>
-                                <button type="button">
+                                {/* <button type="button">
                                 UpdateSpot
-                                </button>
+                                </button> */}
                             </NavLink>
                         </li>
                     </span>

@@ -20,7 +20,7 @@ function Navigation({ isLoaded }){
       setCreate("create")
     }
   }, [create, sessionUser])
-  
+
   return (
     <>
     <div className="sticky">
@@ -30,7 +30,7 @@ function Navigation({ isLoaded }){
         <h1>OneStop</h1>
         </NavLink>
       </div>
-      <div>
+      <div className='create__container'>
         <NavLink exact to="/spots" className={create}>
           create new spot
         </NavLink>

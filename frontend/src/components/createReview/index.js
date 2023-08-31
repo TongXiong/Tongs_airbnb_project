@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useState } from "react"
+import { useEffect, useState} from "react"
 import { createReview, deleteReview } from "../../store/spotreducer"
 import { Link } from "react-router-dom"
 import { useHistory } from "react-router-dom"
@@ -13,6 +13,9 @@ import "./createreview.css"
 
 
 export const CreateReview = ({spot}) => {
+
+  const history = useHistory()
+
     const id = spot.id
     const dispatch = useDispatch()
     const {closeModal} = useModal()
@@ -31,20 +34,23 @@ export const CreateReview = ({spot}) => {
             review,
             stars,
         }
+
         dispatch(createReviewForm(payload, id))
             .catch(async (res) => {
               const data = await res.json();
               if (data.errors) {
                 setValidErrors(data.errors);
               }
-            });
+            })
+            .then(closeModal)
         }
+
       return (
         <div>
             <div className="title">
                 <form onSubmit={handleSubmit} className="createReview">
                     <h1>How was your stay?</h1>
-                    <div>
+                    <div className="reviewerrors">
                     {validErrors.review && ` ${validErrors.review}`}
                     </div>
                     <textarea
@@ -69,7 +75,8 @@ export const CreateReview = ({spot}) => {
                           );
                         })}
                       </div>
-                    <button type="submit">
+                    <button type="submit"
+                    >
                         Submit Review
                     </button>
                 </form>

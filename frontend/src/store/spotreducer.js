@@ -251,8 +251,8 @@ const spotReducer = (state = iniState, action) => {
         delete newState[action.Spot];
         return newState;
     case REMOVE_REVIEW:
-        const newState1 = {...state, spot: {...state.spot}};
-        delete newState1.spot[action.review]
+        const newState1 = {...state, "review": {...state.review}};
+        delete newState1.review[action.review]
         return newState1
     case CREATE_SPOT:
         const newState2 = {...state, spot: {...state.spot}}
@@ -262,10 +262,11 @@ const spotReducer = (state = iniState, action) => {
         const newState3 = {...state, spot: {...state.spot, ['Images']: action.image}}
         return newState3;
     case CREATE_REVIEW:
-        const newState4 ={...state, spot: {...state.spot, ["review"]: action.review}}
-        return newState4;
+        const newState4 = {...state, "review": {...state.review, spot: {...state.spot}}}
+        newState.spot = action.review
+        return newState4
     case UPDATE_SPOT:
-        const newstate5 ={...state, spot: {...state.spot}}
+        const newstate5 ={...state}
         newstate5.spot = action.spot
         return newstate5;
     // action.Review = id

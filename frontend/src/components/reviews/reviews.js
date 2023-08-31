@@ -20,10 +20,11 @@ export const Review = ({spot}) => {
             return null
         }
       })
+      
 
       useEffect(() => {
           dispatch(review(spotId))
-        }, [dispatch, spotId])
+        }, [dispatch])
 
         if (!reviewOfId) {
             return null;

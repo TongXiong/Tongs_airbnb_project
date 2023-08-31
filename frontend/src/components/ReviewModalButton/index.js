@@ -17,7 +17,7 @@ export const ReviewDeleteModal = ({review}) => {
     const [show, setShow] = useState("show")
 
     const sessionUser = useSelector((state) => {
-        if (state.session) {
+        if (state.session.user) {
             return state.session.user
         } else {
             return null
@@ -25,7 +25,11 @@ export const ReviewDeleteModal = ({review}) => {
     })
 
     useEffect(() => {
-        if (review.User.firstName !== sessionUser.firstName) {
+        if (sessionUser) {
+            if (review.userId !== sessionUser.id) {
+                return setShow("noshow")
+            }
+        } else {
             return setShow("noshow")
         }
     }, [show])

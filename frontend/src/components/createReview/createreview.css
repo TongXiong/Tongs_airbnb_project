@@ -15,3 +15,7 @@
   .off {
     color: #ccc;
 }
+
+.reviewerrors {
+  color: red;
+}

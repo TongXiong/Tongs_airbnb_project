@@ -12,12 +12,31 @@ import "./DeleteModal.css"
 
 
 export const DeleteModal = ({spot}) => {
-    const { closeModal } = useModal()
-    const dispatch = useDispatch()
+
+    const [show, setShow] = useState("show")
+
+    const sessionUser = useSelector((state) => {
+        if (state.session.user) {
+            return state.session.user
+        } else {
+            return null
+        }
+    })
+
+    useEffect(() => {
+        if (sessionUser) {
+            if (spot.ownerId !== sessionUser.id) {
+                return setShow("noshow")
+            }
+        } else {
+            return setShow("noshow")
+        }
+
+    }, [show])
 
     return (
         <div>
-            <div>
+            <div className={show}>
             <OpenModalButton
             modalComponent={<DeleteById spot={spot}/>}
             buttonText="Delete"

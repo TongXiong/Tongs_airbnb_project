@@ -28,14 +28,14 @@ export const CreateReviewModal = ({spot}) => {
 
     return (
         <div>
-            <div className={create}>
+            {/* <div className={create}>
             <OpenModalButton
             modalComponent={<CreateReview spot={spot}/>}
             buttonText="Post your Reviews"
             />
             </div>
             <button>
-            </button>
+            </button> */}
         </div>
     )
 }

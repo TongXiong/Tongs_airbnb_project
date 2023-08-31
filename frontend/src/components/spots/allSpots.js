@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback, useMemo} from "react"
 import { retrieveSpots } from "../../store/spotreducer"
 import { useHistory} from "react-router-dom"
 import DeleteModal from "../DeleteSpot"
@@ -10,15 +10,15 @@ export const SpotsBrowser = () => {
     const dispatch = useDispatch()
     const history = useHistory()
 
-    const [isHover, setIsHover] = useState(false)
+    const [isHover, setIsHover] = useState()
 
     const handleMouseEnter = () => {
-        setIsHover(true)
+        return setIsHover(true)
     }
 
-    const handleMouseLeave = () => {
-        setIsHover(false)
-    }
+    const handleMouseLeave = useMemo(() => {
+        return setIsHover(false)
+    }, [])
 
     const boxStyle = {
         cursor: isHover ? 'pointer' : 'none'
@@ -26,11 +26,13 @@ export const SpotsBrowser = () => {
 
     const spots = useSelector((state) => {
         if (state.spots) {
-            return state.spots
+            return Object.values(state.spots)
         } else {
             return null;
         }
     })
+
+    console.log(spots)
     useEffect(() => {
         dispatch(retrieveSpots())
     }, [dispatch])
@@ -39,12 +41,10 @@ export const SpotsBrowser = () => {
         return null;
     }
 
-    const spotsArr = Object.values(spots)
-
     return (
         <div className="landingpage">
             <ul>
-                {spotsArr.map((spot) => {
+                {spots.map((spot) => {
                     return <span key={spot.id} className="listcontainer">
                         <li>
                             <img src={spot.previewImage} className="images" onClick={(() => {

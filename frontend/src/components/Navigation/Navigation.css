@@ -119,6 +119,10 @@ div.awesomefont {
     background-color: white;
 }
 
+.create__container {
+    display: flex;
+    align-items: center;
+}
 .create {
     display: flex;
     text-decoration: none;
