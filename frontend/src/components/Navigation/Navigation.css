@@ -131,3 +131,13 @@ div.awesomefont {
 .createHidden {
     display: none;
 }
+
+.title {
+    display: flex;
+    align-items: flex-start;
+}
+
+.authcontainer {
+    display: flex;
+    width: 100%;
+}
