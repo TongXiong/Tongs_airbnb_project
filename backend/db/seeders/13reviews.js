@@ -25,8 +25,8 @@ module.exports = {
       {
         spotId: 2,
         userId: 11,
-        review: "Staying in Heaven is an amazing experience. It's a place of peace and harmony, where everyone gets along and works together in harmony".
-        stars: 5,
+        review: "Staying in Heaven is an amazing experience. It's a place of peace and harmony, where everyone gets along and works together in harmony.",
+        stars: 5
       },
       {
         spotId: 2,
@@ -37,7 +37,7 @@ module.exports = {
       {
         spotId: 3,
         userId: 3,
-        review: "On a non-school day, my granddaughter and I visited the Natural History Museum of Los Angeles County."
+        review: "On a non-school day, my granddaughter and I visited the Natural History Museum of Los Angeles County.",
         stars: 3.5,
       },
       {
